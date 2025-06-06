@@ -1,7 +1,7 @@
-import { PropsWithChildren, useEffect } from "react";
+// import { PropsWithChildren, useEffect } from "react";
 
-export const farcasterConfig = {
-  rpcUrl: 'https://mainnet.optimism.io',
-  domain: 'brnd.land',
-  siweUri: 'https://example.com/login',
-};
+// export const farcasterConfig = {
+//   rpcUrl: 'https://mainnet.optimism.io',
+//   domain: 'brnd.land',
+//   siweUri: 'https://example.com/login',
+// };

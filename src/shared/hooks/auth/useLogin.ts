@@ -2,16 +2,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Services
-import { LogInParams, logIn } from "@/services/auth";
+import { logIn } from "@/services/auth";
 
 // Hooks
 import { ModalsIds, useModal } from "../ui/useModal";
 
 /**
- * Custom hook to perform a login operation.
- *
- * This hook uses the `useMutation` hook from `react-query` to handle the login process.
- * It sends a POST request to the login endpoint with the login details provided.
+ * Custom hook to perform a login operation using Farcaster miniapp context.
+ * This is only used within Farcaster miniapps.
  *
  * @returns A mutation object that can be used to track the status of the login request.
  */
@@ -20,35 +18,21 @@ export const useLogIn = () => {
   const { openModal } = useModal();
 
   return useMutation({
-    /**
-     * The function to be called to perform the login operation.
-     * @param {LogInParams} params - The login parameters.
-     */
-    mutationFn: ({
-      fid,
-      signature,
-      message,
-      domain,
-      nonce,
-      username,
-      photoUrl,
-    }: LogInParams) =>
-      logIn({
-        fid,
-        signature,
-        message,
-        domain,
-        nonce,
-        username,
-        photoUrl,
-      }),
+    mutationFn: (params: {
+      fid: number;
+      domain: string;
+      username: string;
+      token: string;
+      photoUrl: string;
+    }) => logIn(params),
     onSuccess(data) {
       if (data) {
         const { user } = data;
         queryClient.setQueryData(["auth"], user);
       }
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Login error:", error);
       openModal(ModalsIds.ERROR, {
         title: "Unable to connect to the platform.",
         message: "The service is probably down, try again later.",

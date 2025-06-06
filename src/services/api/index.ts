@@ -4,6 +4,7 @@ import axios, { AxiosResponse } from "axios";
 
 // Config
 import { API_URL } from "@/config/api";
+import { getFarcasterToken } from "@/shared/utils/auth";
 
 /**
  * Default headers for the requests.
@@ -30,20 +31,30 @@ export async function request<T>(
     headers = {},
   }: RequestProps
 ): Promise<T> {
+  console.log(`🚀 Making ${method} request to ${path}`);
+  console.log("THE BODY IS", body);
+
   const url = baseUrl ?? API_URL;
   const fullUrl = new URL(`${url}${path}`);
 
   if (params) {
+    console.log("Adding query params:", params);
     Object.keys(params).forEach((key) =>
       fullUrl.searchParams.append(key, params[key])
     );
   }
+
+  // Get the Farcaster token
+  const farcasterToken = getFarcasterToken();
+  console.log("Farcaster token present:", !!farcasterToken);
 
   const config: RequestInit = {
     method: method,
     headers: {
       ...DEFAULT_HEADERS,
       ...headers,
+      // Add the Farcaster token if it exists
+      ...(farcasterToken && { Authorization: `Bearer ${farcasterToken}` }),
     },
     credentials: "include",
     ...(body && {
@@ -51,15 +62,30 @@ export async function request<T>(
     }),
   };
 
+  console.log("Request config:", {
+    url: fullUrl.toString(),
+    method: config.method,
+    headers: config.headers,
+    hasBody: !!config.body,
+    body: config.body,
+  });
+
   try {
+    console.log("Sending request...");
     const response = await fetch(fullUrl.toString(), config);
+
     if (!response.ok) {
+      console.error("Request failed:", response.status, response.statusText);
       throw new Error(`Error: ${response.statusText}`);
     }
+
+    console.log("Request successful, parsing response...");
     const data: T = await response.json();
+    console.log("Response data:", data);
     return data;
   } catch (error) {
-    console.error(error);
+    console.error("Request error:", error);
+
     throw error;
   }
 }

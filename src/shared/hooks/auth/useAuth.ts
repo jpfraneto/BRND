@@ -1,21 +1,27 @@
 // Dependencies
-import {useQuery} from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
 // Services
-import {getMe} from '@/services/auth';
+import { getMe } from "@/services/auth";
+
+// Context
+import { AuthContext } from "@/shared/providers/AppProvider";
+import { useContext } from "react";
 
 /**
  * Custom hook to fetch and cache the authentication status and user information.
  * It uses the `useQuery` hook from `@tanstack/react-query` to fetch the data using `getMe` function.
- * 
+ *
  * @returns The query object containing the user data and status of the query.
  */
-export const useAuth = () => { 
+export const useAuth = () => {
+  const { token, miniappContext } = useContext(AuthContext);
+
   return useQuery({
-    queryKey: ['auth'], 
-    queryFn: getMe, 
+    queryKey: ["auth"],
+    queryFn: getMe,
     retry: false,
     staleTime: 0,
-    enabled: false,
+    enabled: !!token && !!miniappContext,
   });
 };

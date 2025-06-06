@@ -15,10 +15,8 @@ import { User } from "../shared/hooks/user";
  */
 export interface LogInParams {
   fid: number;
-  signature: `0x${string}`;
-  message: string;
-  nonce: string;
   domain: string;
+  token: string;
   username: string;
   photoUrl: string;
 }
