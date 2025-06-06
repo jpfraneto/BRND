@@ -1,0 +1,169 @@
+@import "@/styles/index.scss";
+
+
+.body {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 634px;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+}
+
+.containerTitle {
+  width: 100%;
+  background: linear-gradient(179.77deg, rgb(10 11 13) 0.2%, #0b0b0e 68%, #0a0b0d00 100%);
+  padding-bottom: 16px;
+  padding-top: 62px;
+}
+
+.header {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 16px;
+
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #FFF100 0%, #FF0000 33%, #0C00FF 66%, #00FF00 100%);
+  }
+}
+
+.logo {
+  width: 180px;
+  height: 44px;
+
+  @include isDesktopL() {
+    width: 164px;
+    height: 40px;
+  }
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100%;
+
+  position: relative;
+  z-index: 4;
+}
+
+.brand {
+  width: 100%;
+  height: 77.51px;
+  
+  @include isDesktopL() {
+    width: 100%;
+    height: 138px;
+  }
+}
+
+.footer {
+  display: flex;
+  flex: 0.3;
+  background: linear-gradient(180deg, rgba(16, 14, 20, 0) 0%, #0a0b0d 87.8%);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+
+  padding-bottom: 42px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.title {
+  background-clip: text;
+  color: #fff;
+  text-transform: uppercase;
+
+  font-size: 24px;
+  line-height: 30px;
+  
+  @include isDesktopL() {
+    font-size: 32px;
+    line-height: 40px;
+  }
+}
+
+
+.decorator {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.squareGrid {
+  display: grid;
+  grid-template-columns: 46% 46%;
+  gap: 24px;
+
+  @include isTablet() {
+    grid-row-gap: 10%;
+  }
+
+  width: 100%;
+  height: fit-content;
+  max-width: 620px;
+  z-index: 2;
+  padding-left: 14px;
+  padding-top: 90px; 
+
+}
+
+.square {
+  width: 100%;
+}
+
+.square:nth-child(2n) {
+  position: relative;
+  top: 44px;
+
+  @include isDesktopL() {
+    top: 84px;
+  }
+}
+
+.box {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 172/172;
+
+  @include isDesktopL() {
+    aspect-ratio: 242/242;
+  }
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+

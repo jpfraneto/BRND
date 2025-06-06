@@ -1,0 +1,63 @@
+.layout {
+  display: flex;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 36px;
+  cursor: pointer;
+}
+
+.primary {
+  position: relative;
+  border: none;
+  overflow: hidden;
+  background: linear-gradient(88.53deg, #FF9533 9.34%, #FF0000 36.21%, #0C00FF 63.09%, #00FF00 90.78%);
+  padding: 1px;
+
+  .container {
+    display: flex;
+    flex: 1;
+    background-color: #000;
+    padding: 0 12px;
+    border-radius: 36px;
+  }
+
+  .effect {
+    inset: 0;
+    position: absolute;
+    background: linear-gradient(88.53deg, #FF9533 9.34%, #FF0000 36.21%, #0C00FF 63.09%, #00FF00 90.78%);
+    filter: blur(20px);
+  }
+
+  color: #fff;
+}
+
+.secondary {
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: #fff;
+}
+
+.outline {
+  background-color: transparent;
+  border: 1px solid #FFFFFF;
+  color: #fff;
+}
+
+.solid {
+  background-color: #222325;
+  border: none;
+  color: #fff;
+}
+
+.container, .icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+}
