@@ -11,7 +11,6 @@ import sdk, { type Context } from "@farcaster/frame-sdk";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Services
-import { logIn } from "@/services/auth";
 import { setFarcasterToken } from "../utils/auth";
 
 export const AuthContext = createContext<{
@@ -19,19 +18,28 @@ export const AuthContext = createContext<{
   signIn: () => Promise<void>;
   signOut: () => void;
   miniappContext: Context.FrameContext | null;
+  isInitialized: boolean;
 }>({
   token: undefined,
   signIn: async () => {},
   signOut: () => {},
   miniappContext: null,
+  isInitialized: false,
 });
 
 const queryClient = new QueryClient();
 
 /**
- * AppProvider component that wraps the application with necessary providers.
+ * AppProvider component that manages Farcaster miniapp authentication and context.
  *
- * @returns {JSX.Element} The wrapped child components with BottomSheetProvider and ModalProvider.
+ * This provider handles the complete authentication flow for Farcaster miniapps:
+ * 1. Initializes the Farcaster SDK and obtains QuickAuth token
+ * 2. Loads miniapp context (user data, etc.)
+ * 3. Automatically authenticates with backend via /me endpoint
+ * 4. Manages authentication state throughout the app lifecycle
+ *
+ * The provider eliminates the need for explicit login flows since Farcaster
+ * miniapps have implicit authentication through the platform.
  */
 export function AppProvider(): JSX.Element {
   const [token, setToken] = useState<string>();
@@ -44,70 +52,47 @@ export function AppProvider(): JSX.Element {
       if (isInitialized) return;
 
       try {
-        console.log("INITIALIZING THE MINIAPP");
-        // Init Quick Auth
+        console.log("Initializing Farcaster miniapp...");
+
+        // Obtain QuickAuth token from Farcaster
         const { token: newToken } = await sdk.actions.quickAuth();
         setToken(newToken);
         setFarcasterToken(newToken);
-        console.log("TOKEN", newToken);
+        console.log("QuickAuth token obtained");
 
-        // Finish Miniapp Init
+        // Signal that miniapp is ready
         await sdk.actions.ready();
 
-        // Load and store the miniapp context
+        // Load miniapp context (user profile, etc.)
         const context = await sdk.context;
-        console.log("MINIAPP CONTEXT", context);
+        console.log("Miniapp context loaded:", context.user.username);
         setMiniappContext(context);
 
-        // Login to our backend with the miniapp data
-        if (context && newToken) {
-          const loginResponse = await logIn({
-            fid: context.user.fid,
-            token: newToken,
-            domain: "miniapp.anky.app",
-            username: context.user.username || "",
-            photoUrl: context.user.pfpUrl || "",
-          });
-
-          if (loginResponse) {
-            // Update the auth query data with the user
-            queryClient.setQueryData(["auth"], loginResponse.user);
-          }
-        }
-
+        // Backend authentication happens automatically when useAuth calls /me
+        // The /me endpoint will create/update user and return profile data
         setIsInitialized(true);
       } catch (error) {
         console.error("Failed to initialize miniapp:", error);
         setIsInitialized(false);
       }
     }
+
     initMiniapp();
   }, [isInitialized]);
 
   const signIn = async () => {
     try {
+      // Get new QuickAuth token
       const { token: newToken } = await sdk.actions.quickAuth();
       setToken(newToken);
+      setFarcasterToken(newToken);
 
-      // Get fresh context
+      // Refresh context
       const context = await sdk.context;
       setMiniappContext(context);
 
-      if (context && newToken) {
-        console.log("sending the login request to the backend");
-        const loginResponse = await logIn({
-          fid: context.user.fid,
-          token: newToken,
-          domain: "miniapp.anky.app",
-          username: context.user.username || "",
-          photoUrl: context.user.pfpUrl || "",
-        });
-        console.log("loginResponse", loginResponse);
-
-        if (loginResponse) {
-          queryClient.setQueryData(["auth"], loginResponse.user);
-        }
-      }
+      // Clear and refetch auth data - /me will handle user creation/update
+      queryClient.invalidateQueries({ queryKey: ["auth"] });
     } catch (error) {
       console.error("Failed to sign in:", error);
     }
@@ -117,13 +102,21 @@ export function AppProvider(): JSX.Element {
     setToken(undefined);
     setMiniappContext(null);
     setIsInitialized(false);
-    // Clear the auth data
-    queryClient.setQueryData(["auth"], null);
+    // Clear all cached data
+    queryClient.clear();
   };
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthContext.Provider value={{ token, signIn, signOut, miniappContext }}>
+      <AuthContext.Provider
+        value={{
+          token,
+          signIn,
+          signOut,
+          miniappContext,
+          isInitialized,
+        }}
+      >
         <BottomSheetProvider>
           <ModalProvider>
             <Outlet />

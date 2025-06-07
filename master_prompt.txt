@@ -1,0 +1,312 @@
+# Farcaster Miniapp Codebase - Comprehensive Context
+
+## Project Overview
+This is a **Farcaster miniapp** built with modern full-stack TypeScript architecture. The application is a brand voting platform where users can vote on brands daily, earn points, and view leaderboards. The app runs inside the Farcaster ecosystem as a miniapp (similar to how apps run inside WeChat or Telegram).
+
+## Architecture Stack
+- **Frontend**: React + TypeScript + Vite + React Query + React Router
+- **Backend**: NestJS + TypeScript + TypeORM + PostgreSQL
+- **Authentication**: Farcaster QuickAuth (JWT-based, no traditional login/signup)
+- **Deployment**: Miniapp hosted within Farcaster platform
+
+## Key Architectural Decisions Made
+
+### Authentication System Simplification
+We **eliminated traditional login flows** in favor of Farcaster's QuickAuth system:
+- **Before**: Separate `/login` endpoint with custom JWT generation
+- **After**: Single `/me` endpoint that handles authentication, user creation, and profile retrieval
+- **Rationale**: Farcaster miniapps have implicit authentication - users are always authenticated through the platform
+
+### Backend Authentication Flow
+```typescript
+// Authentication Guard verifies Farcaster QuickAuth tokens
+@Injectable()
+export class AuthorizationGuard implements CanActivate {
+  // 1. Extracts JWT from Authorization header or cookies
+  // 2. Verifies token with Farcaster's QuickAuth service (not custom verification)
+  // 3. Attaches verified user payload to request object
+  // 4. Allows request to proceed or throws UnauthorizedException
+}
+
+// Session Decorator extracts user from verified request
+export const Session = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext): QuickAuthPayload => {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user; // Contains: { sub: fid, address, iss, aud, exp, iat }
+  },
+);
+```
+
+### Core Endpoint Design
+**Single `/me` endpoint handles everything:**
+```typescript
+@Get('/me')
+@UseGuards(AuthorizationGuard)
+async getMe(
+  @Session() session: QuickAuthPayload, // Verified Farcaster user data
+  @Body() body: { username?: string; photoUrl?: string }, // Optional profile updates
+  @Res() res: Response,
+) {
+  // 1. Extract FID (Farcaster ID) from verified token (session.sub)
+  // 2. Look up user in database by FID
+  // 3. If user doesn't exist: create new user (first-time visitor)
+  // 4. If user exists: optionally update profile data
+  // 5. Calculate daily voting status
+  // 6. Return complete user profile + voting status + isNewUser flag
+}
+```
+
+### Frontend State Management
+**React Query + Context pattern:**
+```typescript
+// AuthContext provides global authentication state
+export const AuthContext = createContext({
+  token: string | undefined,        // QuickAuth JWT token
+  miniappContext: Context | null,   // Farcaster miniapp context
+  isInitialized: boolean,          // Initialization status
+  signIn: () => Promise<void>,     // Manual re-authentication
+  signOut: () => void,             // Clear auth state
+});
+
+// useAuth hook manages server state
+export const useAuth = () => {
+  return useQuery({
+    queryKey: ["auth"],
+    queryFn: getMe, // Calls GET /auth-service/me
+    enabled: !!token && !!miniappContext && isInitialized,
+    // Automatically handles: loading, error, caching, background refetch
+  });
+};
+```
+
+## Current Codebase Structure
+
+### Backend (NestJS)
+```
+src/
+├── core/
+│   ├── auth/
+│   │   ├── auth.controller.ts     # Single /me endpoint + /logout
+│   │   ├── auth.module.ts         # Module configuration
+│   │   └── services/
+│   │       └── auth.service.ts    # QuickAuth token verification only
+│   └── user/
+│       └── services/
+│           └── user.service.ts    # User CRUD, voting logic, points system
+├── security/
+│   ├── guards/
+│   │   └── authorization.guard.ts # QuickAuth JWT verification
+│   └── decorators/
+│       └── user.decorator.ts      # @Session() decorator
+├── models/
+│   └── User/
+│       ├── User.entity.ts         # User database entity
+│       └── User.types.ts          # QuickAuthPayload interface
+└── utils/
+    └── response.helpers.ts        # hasResponse, hasError utilities
+```
+
+### Frontend (React)
+```
+src/
+├── services/
+│   ├── api.ts                     # HTTP client with QuickAuth Bearer token
+│   └── auth.ts                    # getMe() function only
+├── shared/
+│   ├── providers/
+│   │   └── AppProvider.tsx        # Farcaster SDK init + auth context
+│   └── hooks/
+│       ├── user/
+│       │   └── useAuth.ts         # React Query hook for user state
+│       └── auth/
+│           └── useProfileUpdate.ts # Profile update mutation
+├── pages/
+│   ├── HomePage.tsx               # Brand listing and voting
+│   ├── ProfilePage.tsx            # User profile and voting history
+│   ├── VotePage.tsx               # Daily voting interface
+│   └── WelcomePage.tsx            # First-time user onboarding
+└── config/
+    └── router.tsx                 # React Router setup (no /login route)
+```
+
+## Key Data Types
+
+### QuickAuth JWT Payload (from Farcaster)
+```typescript
+interface QuickAuthPayload {
+  sub: number;        // Farcaster ID (FID) - primary user identifier
+  address: string;    // Ethereum address used for authentication
+  iss: string;        // Issuer: https://auth.farcaster.xyz
+  aud: string;        // Audience: your miniapp domain
+  exp: number;        // Expiration timestamp
+  iat: number;        // Issued at timestamp
+}
+```
+
+### User Entity (Database)
+```typescript
+interface User {
+  id: string;                    // Primary key
+  fid: number;                   // Farcaster ID (unique)
+  username: string;              // Display name
+  photoUrl: string | null;       // Profile picture URL
+  points: number;                // Accumulated points from voting
+  role: UserRoleEnum;            // USER | ADMIN
+  createdAt: Date;               // Account creation
+  updatedAt: Date;               // Last modification
+  userBrandVotes: UserBrandVotes[]; // Voting history relationship
+}
+```
+
+### API Response Format
+```typescript
+// GET /auth-service/me response
+interface MeResponse {
+  fid: string;                   // User's Farcaster ID as string
+  username: string;              // Display name
+  photoUrl: string | null;       // Profile picture
+  points: number;                // Current points balance
+  createdAt: Date;               // Account creation date
+  hasVotedToday: boolean;        // Daily voting status
+  isNewUser: boolean;            // First-time user flag for onboarding
+}
+```
+
+## Current Authentication Flow
+
+### 1. App Initialization (AppProvider.tsx)
+```typescript
+useEffect(() => {
+  // 1. Initialize Farcaster SDK
+  const { token } = await sdk.actions.quickAuth(); // Get JWT from Farcaster
+  setToken(token);
+  
+  // 2. Get miniapp context
+  const context = await sdk.context; // User profile, permissions, etc.
+  setMiniappContext(context);
+  
+  // 3. Signal ready to Farcaster
+  await sdk.actions.ready();
+  
+  // 4. Backend authentication happens automatically via useAuth hook
+}, []);
+```
+
+### 2. Automatic Backend Authentication (useAuth.ts)
+```typescript
+// When token + context are available, React Query automatically calls:
+const { data: user, isLoading, error } = useQuery({
+  queryKey: ["auth"],
+  queryFn: getMe, // GET /auth-service/me with Bearer token
+  enabled: !!token && !!miniappContext && isInitialized,
+});
+
+// Backend response is cached and available app-wide
+```
+
+### 3. Backend Processing (auth.controller.ts)
+```typescript
+// Request flow:
+// 1. AuthorizationGuard extracts + verifies QuickAuth token
+// 2. User FID extracted from verified token payload
+// 3. Database lookup by FID
+// 4. Auto-create user if first visit
+// 5. Calculate voting status
+// 6. Return complete profile
+```
+
+## Business Logic
+
+### Voting System
+- Users vote on 3 brands daily (ranking: 1st, 2nd, 3rd place)
+- Points awarded: 1st place = 60pts, 2nd = 30pts, 3rd = 10pts
+- Daily voting status tracked for UI state management
+- Voting history stored with brand relationships
+
+### Points System
+- Earned through daily voting
+- Used for leaderboards and gamification
+- Additional points for sharing (first-time bonus)
+
+### User Lifecycle
+1. **First Visit**: Auto-created via `/me` endpoint, `isNewUser: true`
+2. **Return Visits**: Profile updated, voting status checked
+3. **Profile Updates**: Username/photo changes through same `/me` endpoint
+
+## Important Implementation Notes
+
+### Why No Traditional Login?
+- Farcaster miniapps run in authenticated context
+- Users are implicitly authenticated by the platform
+- QuickAuth provides cryptographically signed JWTs
+- No need for registration, email verification, password management
+
+### Token Management
+- **Frontend**: Stores QuickAuth token in memory + localStorage
+- **Backend**: Verifies tokens using Farcaster's service (not custom verification)
+- **Cookies**: Optional fallback for web compatibility
+- **Headers**: Primary method via `Authorization: Bearer <token>`
+
+### Error Handling Strategy
+- **Guard Level**: Invalid tokens → UnauthorizedException
+- **Service Level**: Business logic errors → specific error responses
+- **Frontend**: React Query handles retries, caching, error states
+- **User Experience**: Meaningful error messages via modal system
+
+## Database Relationships
+```sql
+Users (1) ←→ (many) UserBrandVotes (many) ←→ (1) Brands
+Users (1) ←→ (1) UserDailyActions
+```
+
+## Development Patterns Used
+
+### Backend Patterns
+- **Dependency Injection**: Services injected into controllers
+- **Decorator Pattern**: Custom parameter decorators for clean code
+- **Guard Pattern**: Authentication/authorization middleware
+- **Repository Pattern**: TypeORM for database abstraction
+
+### Frontend Patterns  
+- **Custom Hooks**: Reusable stateful logic
+- **Context + Provider**: Global state management
+- **Query/Mutation Pattern**: Server state via React Query
+- **Component Composition**: Modular UI architecture
+
+## Common Operations
+
+### Adding New Protected Endpoint
+```typescript
+@Get('/new-endpoint')
+@UseGuards(AuthorizationGuard)  // Ensures authentication
+async newEndpoint(@Session() user: QuickAuthPayload) {
+  // user.sub contains the Farcaster ID
+  // Automatically authenticated and typed
+}
+```
+
+### Frontend Data Fetching
+```typescript
+const useNewData = () => {
+  return useQuery({
+    queryKey: ["new-data"],
+    queryFn: () => api.getNewData(),
+    enabled: !!token, // Only fetch when authenticated
+  });
+};
+```
+
+### Profile Updates
+```typescript
+// Frontend
+const updateMutation = useMutation({
+  mutationFn: (data) => updateProfile(data),
+  onSuccess: (newUser) => {
+    queryClient.setQueryData(["auth"], newUser); // Update cache
+  },
+});
+
+// Backend - same /me endpoint handles updates
+```
+
+This architecture is production-ready, scalable, and follows modern best practices for TypeScript full-stack development with strong typing, error handling, and user experience optimization.

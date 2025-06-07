@@ -7,55 +7,50 @@ import { AUTH_SERVICE } from "@/config/api";
 // Types
 import { User } from "../shared/hooks/user";
 
-/* =======================================
-   = = = = = = = = = = = = = = = = = = = =
-   ======================================= */
-/**
- * Parameters required for the logIn function.
- */
-export interface LogInParams {
-  fid: number;
-  domain: string;
-  token: string;
-  username: string;
-  photoUrl: string;
-}
-
-/**
- * Represents the response structure for the login operation.
- *
- * @property {boolean} isCreated - Indicates if a new user was created during the login process.
- * @property {boolean} hasVotedToday - Indicates if the user has voted today.
- * @property {User} user - Contains user-specific information.
- */
-export interface LogInResponse {
-  isCreated: boolean;
-  hasVotedToday: boolean;
-  user: User;
-}
-
-/**
- * Sends a login request to the authentication service.
- *
- * @param body - The parameters required for logging in.
- * @returns A promise that resolves when the request is complete.
- */
-export const logIn = async (body: LogInParams) =>
-  await request<LogInResponse>(`${AUTH_SERVICE}/login`, {
-    method: "POST",
-    body,
-  });
-
-/* =======================================
-   = = = = = = = = = = = = = = = = = = = =
-   ======================================= */
-
 /**
  * Retrieves the current user's information from the authentication service.
  *
- * @returns A promise that resolves with the user's information.
+ * This function calls the /me endpoint which handles:
+ * - QuickAuth token verification
+ * - Automatic user creation for first-time users
+ * - Profile updates when user data has changed
+ * - Daily voting status calculation
+ *
+ * The endpoint replaces traditional login flows since Farcaster miniapps
+ * have implicit authentication through the platform.
+ *
+ * @returns A promise that resolves with the user's complete profile data
  */
-export const getMe = async () =>
-  await request<User>(`${AUTH_SERVICE}/me`, {
-    method: "GET",
-  });
+export const getMe = async (): Promise<
+  User & {
+    hasVotedToday: boolean;
+    isNewUser: boolean;
+  }
+> =>
+  await request<User & { hasVotedToday: boolean; isNewUser: boolean }>(
+    `${AUTH_SERVICE}/me`,
+    {
+      method: "GET",
+    }
+  );
+
+/**
+ * Updates user profile information.
+ *
+ * This function sends profile updates to the /me endpoint which will
+ * update the user's information in the database.
+ *
+ * @param profileData - Updated profile information (username, photoUrl)
+ * @returns Promise resolving to updated user profile
+ */
+export const updateProfile = async (profileData: {
+  username?: string;
+  photoUrl?: string;
+}): Promise<User & { hasVotedToday: boolean; isNewUser: boolean }> =>
+  await request<User & { hasVotedToday: boolean; isNewUser: boolean }>(
+    `${AUTH_SERVICE}/me`,
+    {
+      method: "GET",
+      body: profileData,
+    }
+  );

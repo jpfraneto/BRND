@@ -1,51 +1,55 @@
 // Dependencies
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from "react-router-dom";
 
 // Pages
-import LoginPage from '../pages/LoginPage';
-import NotFoundPage from '../pages/NotFoundPage';
-import VotePage from '../pages/VotePage';
-import HomePage from '../pages/HomePage';
-import WelcomePage from '../pages/WelcomePage';
-import ProfilePage from '../pages/ProfilePage';
-import BrandPage from '../pages/BrandPage';
-import ClaimedPage from '../pages/ClaimedPage';
+import NotFoundPage from "../pages/NotFoundPage";
+import VotePage from "../pages/VotePage";
+import HomePage from "../pages/HomePage";
+import WelcomePage from "../pages/WelcomePage";
+import ProfilePage from "../pages/ProfilePage";
+import BrandPage from "../pages/BrandPage";
+import ClaimedPage from "../pages/ClaimedPage";
 
 // Providers
-import { AppProvider } from '../shared/providers/AppProvider';
+import { AppProvider } from "../shared/providers/AppProvider";
 
+/**
+ * Router configuration for Farcaster miniapp.
+ *
+ * Note: LoginPage has been removed since authentication is handled
+ * automatically through Farcaster's QuickAuth system. Users are
+ * implicitly authenticated when accessing the miniapp.
+ */
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <AppProvider />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <HomePage />,
         children: [
-          { path: 'top', element: <HomePage /> },
-          { path: 'new', element: <HomePage /> },
-          { path: 'all', element: <HomePage /> },
+          { path: "top", element: <HomePage /> },
+          { path: "new", element: <HomePage /> },
+          { path: "all", element: <HomePage /> },
         ],
       },
       {
-        path: '/profile',
+        path: "/profile",
         element: <ProfilePage />,
         children: [
-          { path: '', element: <ProfilePage /> },
-          { path: 'podium', element: <ProfilePage /> },
+          { path: "", element: <ProfilePage /> },
+          { path: "podium", element: <ProfilePage /> },
         ],
       },
       {
-        path: '/brand/:id',
+        path: "/brand/:id",
         element: <BrandPage />,
       },
-      { path: '/welcome', element: <WelcomePage /> },
-      { path: '/vote/:unixDate?', element: <VotePage /> },
-      { path: '/login', element: <LoginPage /> },
-      { path: '/claimed', element: <ClaimedPage /> },
-      { path: '*', element: <NotFoundPage /> },
-    ]
-  }
+      { path: "/welcome", element: <WelcomePage /> },
+      { path: "/vote/:unixDate?", element: <VotePage /> },
+      { path: "/claimed", element: <ClaimedPage /> },
+      { path: "*", element: <NotFoundPage /> },
+    ],
+  },
 ]);
-
