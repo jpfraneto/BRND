@@ -1,0 +1,85 @@
+// /src/components/cards/PodiumCard/PodiumCard.module.scss
+
+@import "@/styles/index.scss";
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  min-height: 120px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.firstPlace,
+.secondPlace,
+.thirdPlace {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scoreContainer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.score {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.variation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brandImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  margin: 8px 0;
+}
+
+.image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.name {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

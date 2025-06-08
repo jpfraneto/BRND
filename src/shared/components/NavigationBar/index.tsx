@@ -1,88 +1,158 @@
 // Dependencies
-import React, { useCallback } from 'react';
-import classNames from 'clsx';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback } from "react";
+import classNames from "clsx";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // StyleSheet
-import styles from './NavigationBar.module.scss';
+import styles from "./NavigationBar.module.scss";
 
 // Assets
-import HomeIcon from '@/assets/icons/home.svg?react';
-import AddIcon from '@/assets/icons/add.svg?react';
-import ShareIcon from '@/assets/icons/share-icon.svg?react';
-//import ExportAppIcon from '@/assets/icons/export-app-icon.svg?react';
-import BPointIcon from '@/assets/icons/point-b.svg?react';
+import HomeIcon from "@/assets/icons/home.svg?react";
+import PodiumIcon from "@/assets/icons/podium-icon.svg?react";
+import CreateIcon from "@/assets/icons/create-icon.svg?react";
+import RankingIcon from "@/assets/icons/ranking-icon.svg?react";
+import LeadersIcon from "@/assets/icons/leaders-icon.svg?react";
 
 // Components
-import Typography from '../Typography';
-import IconButton from '../IconButton';
+import Typography from "../Typography";
 
 // Hooks
-import { useAuth } from '@/hooks/auth';
-//import { ModalsIds, useModal } from '@/hooks/ui';
+import { useAuth } from "@/hooks/auth";
+import sdk from "@farcaster/frame-sdk";
 
 interface NavigationBarProps {}
 
 const NavigationBar: React.FC<NavigationBarProps> = () => {
   const { data } = useAuth();
-  //const { openModal } = useModal();
   const navigate = useNavigate();
+  const location = useLocation();
 
   /**
-   * Handles the click event for the main button.
-   * Navigates the user to the '/vote' route with the current Unix date if the user has voted today,
-   * otherwise navigates to the '/vote' route without a date.
+   * Handles navigation to home page
    */
-  const handleClickMain = useCallback(() => {
+  const handleClickHome = useCallback(() => {
+    sdk.haptics.selectionChanged();
+    navigate("/");
+  }, [navigate]);
+
+  /**
+   * Handles navigation to podium page
+   */
+  const handleClickPodium = useCallback(() => {
+    sdk.haptics.selectionChanged();
+    navigate("/podium");
+  }, [navigate]);
+
+  /**
+   * Handles the main create/vote action
+   */
+  const handleClickCreate = useCallback(() => {
+    sdk.haptics.selectionChanged();
     const currentUnixDate = Math.floor(new Date().getTime() / 1000);
-    navigate(data?.hasVotedToday ? `/vote/${currentUnixDate}` : '/vote');
+    navigate(data?.hasVotedToday ? `/vote/${currentUnixDate}` : "/vote");
   }, [data, navigate]);
-  
-  /**
-   * Handles the click event for the "How It Works" button.
-   * Opens a modal with instructions on how to add the app to the home screen.
-   */
-  /*
-  const handleClickHowToWorks = useCallback(() => {
-    openModal(ModalsIds.BOTTOM_ALERT, {
-      title: 'Add BRND to your home screen',
-      content: (
-        <div className={styles.list}>
-          <Typography size={14} weight={'regular'} lineHeight={18}>1. Tap the <span><ExportAppIcon /></span> share icon at the bottom of the screen</Typography>
-          <Typography size={14} weight={'regular'} lineHeight={18}>2. Select add to home screen</Typography>
-          <Typography size={14} weight={'regular'} lineHeight={18}>3. Let's go play!</Typography>
-        </div>
-      )
-    });
-  }, [openModal]);
-  */
 
-  const handleClickGoHome = useCallback(() => {
-    navigate('/');
+  /**
+   * Handles navigation to ranking page
+   */
+  const handleClickRanking = useCallback(() => {
+    sdk.haptics.selectionChanged();
+    navigate("/ranking");
   }, [navigate]);
 
   /**
-   * Handles the click event for the user button.
-   * Navigates the user to the '/profile' route.
+   * Handles navigation to leaders page
    */
-  const handleClickUser = useCallback(() => {
-    navigate('/profile');
+  const handleClickLeaders = useCallback(() => {
+    sdk.haptics.selectionChanged();
+    navigate("/leaders");
   }, [navigate]);
+
+  /**
+   * Determines if a tab is active based on current route
+   */
+  const isActive = useCallback(
+    (path: string) => {
+      if (path === "/" && location.pathname === "/") return true;
+      if (path !== "/" && location.pathname.startsWith(path)) return true;
+      return false;
+    },
+    [location.pathname]
+  );
 
   return (
     <div className={classNames(styles.layout)}>
-      <div className={styles.icon}>
-        <IconButton variant={'secondary'} icon={<HomeIcon />} onClick={handleClickGoHome} />
-      </div>
-      <div className={styles.icon}>
-        <IconButton variant={'primary'} icon={data?.hasVotedToday ? <ShareIcon /> : <AddIcon />} onClick={handleClickMain} />
-      </div>
-      <button className={classNames(styles.icon, styles.user)} onClick={handleClickUser}>
-        <div className={styles.points}>
-          <Typography weight={'regular'} size={14} lineHeight={18}>{data?.points}</Typography>
-          <BPointIcon width={15} height={12} />
+      {/* Home Tab */}
+      <button
+        className={classNames(styles.tab, { [styles.active]: isActive("/") })}
+        onClick={handleClickHome}
+      >
+        <div className={styles.iconWrapper}>
+          <HomeIcon className={styles.icon} />
         </div>
-        <img alt={data?.username} className={styles.avatar} src={data?.photoUrl} width={32} height={32} />
+        <Typography size={10} weight="medium" className={styles.label}>
+          Home
+        </Typography>
+      </button>
+
+      {/* Podium Tab */}
+      <button
+        className={classNames(styles.tab, {
+          [styles.active]: isActive("/podium"),
+        })}
+        onClick={handleClickPodium}
+      >
+        <div className={styles.iconWrapper}>
+          <PodiumIcon className={styles.icon} />
+        </div>
+        <Typography size={10} weight="medium" className={styles.label}>
+          Podium
+        </Typography>
+      </button>
+
+      {/* Create Tab (Center with special styling) */}
+      <button
+        className={classNames(styles.tab, styles.createTab, {
+          [styles.active]: isActive("/vote"),
+        })}
+        onClick={handleClickCreate}
+      >
+        <div className={styles.createIconWrapper}>
+          <CreateIcon className={styles.createIcon} />
+        </div>
+        <Typography size={10} weight="medium" className={styles.label}>
+          Create
+        </Typography>
+      </button>
+
+      {/* Ranking Tab */}
+      <button
+        className={classNames(styles.tab, {
+          [styles.active]: isActive("/ranking"),
+        })}
+        onClick={handleClickRanking}
+      >
+        <div className={styles.iconWrapper}>
+          <RankingIcon className={styles.icon} />
+        </div>
+        <Typography size={10} weight="medium" className={styles.label}>
+          Ranking
+        </Typography>
+      </button>
+
+      {/* Leaders Tab */}
+      <button
+        className={classNames(styles.tab, {
+          [styles.active]: isActive("/leaders"),
+        })}
+        onClick={handleClickLeaders}
+      >
+        <div className={styles.iconWrapper}>
+          <LeadersIcon className={styles.icon} />
+        </div>
+        <Typography size={10} weight="medium" className={styles.label}>
+          Leaders
+        </Typography>
       </button>
     </div>
   );
