@@ -11,14 +11,14 @@ import Typography from "@/components/Typography";
 import styles from "./PodiumCard.module.scss";
 
 // Types
-import { BrandScoreVariation } from "@/utils/brand";
+import { BrandStateScoreType } from "@/hooks/brands";
 
 interface PodiumCardProps {
   position: number;
   name: string;
   photoUrl: string;
   score: number;
-  variation: BrandScoreVariation;
+  variation: BrandStateScoreType;
   onClick?: () => void;
   className?: string;
 }

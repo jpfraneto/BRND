@@ -12,6 +12,7 @@ import ClaimedPage from "../pages/ClaimedPage";
 
 // Providers
 import { AppProvider } from "../shared/providers/AppProvider";
+import PodiumPage from "@/pages/PodiumPage";
 
 /**
  * Router configuration for Farcaster miniapp.
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
       },
       { path: "/welcome", element: <WelcomePage /> },
       { path: "/vote/:unixDate?", element: <VotePage /> },
-      // { path: "/podium", element: <PodiumPage /> },
+      { path: "/podium", element: <PodiumPage /> },
       { path: "/claimed", element: <ClaimedPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
