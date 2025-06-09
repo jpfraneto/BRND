@@ -1,27 +1,28 @@
-@import "@/styles/index.scss";
+// src/shared/components/PointsHeader/PointsHeader.module.scss
 
-.body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  @include baseLayout();
-  gap: 32px;
-  height: 100vh;
-  overflow: hidden;
-  padding: 0 12px;
-}
+@import "@/styles/index.scss";
 
 .header {
   display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
-  padding-top: 40px;
+  width: 100%;
+  padding-top: 30px;
+  position: relative;
 }
 
-.tabs {
-  width: 100%;
-  padding-top: 20px;
+.left {
+  position: absolute;
+  left: 0;
+  top: 40px;
+}
+
+.user {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile {
@@ -37,6 +38,11 @@
   border-radius: 40px;
   overflow: hidden;
   border: 4px solid #ffffff26;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   img {
     width: 100%;
@@ -55,21 +61,6 @@
     width: 26px;
     height: 26px;
   }
-}
-
-.left {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  width: 100%;
-}
-
-.user {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
 }
 
 .center {

@@ -1,0 +1,87 @@
+// src/pages/LeaderboardPage/LeaderboardPage.module.scss
+
+@import "@/styles/index.scss";
+
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  @include baseLayout();
+  gap: 32px;
+  height: 100vh;
+  overflow: hidden;
+  padding: 0 12px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 40px;
+}
+
+.titleSection {
+  width: 100%;
+  padding-top: 20px;
+}
+
+.title {
+  color: white;
+  text-align: left;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.usersList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  flex: 1;
+  overflow-y: auto;
+
+  li {
+    display: flex;
+  }
+}
+
+.shareSection {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  margin-top: auto;
+}
+
+.shareButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.shareIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.shareText {
+  color: white;
+}

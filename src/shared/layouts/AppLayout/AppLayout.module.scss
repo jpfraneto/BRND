@@ -1,14 +1,21 @@
+// src/shared/layouts/AppLayout/AppLayout.module.scss
+
 @import "@/styles/index.scss";
 
 .layout {
   @include baseLayout();
   position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.view {
-  padding-left: 14px;
-  padding-right: 14px;
-  padding-bottom: 30px;
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 90px;
 }
 
 .bar {
@@ -17,4 +24,8 @@
   @include baseLayout();
   bottom: 0;
   z-index: 50;
+  // Add background to prevent content showing through
+  background: var(--background-color, #000);
+  // Add border or shadow for separation
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }

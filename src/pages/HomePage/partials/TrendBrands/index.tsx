@@ -1,29 +1,31 @@
+// /src/pages/HomePage/partials/TrendBrands/index.tsx
+
 // Dependencies
-import { useCallback, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Components
-import BrandCard from '@/components/cards/BrandCard';
-import { BrandListItem } from '@/components/BrandListItem';
+import BrandCard from "@/components/cards/BrandCard";
+import { BrandListItem } from "@/components/BrandListItem";
 
 // StyleSheet
-import styles from './TrendBrands.module.scss';
+import styles from "./TrendBrands.module.scss";
 
 // Hook
-import { Brand, useBrandList } from '@/hooks/brands';
-import useDisableScrollBody from '@/hooks/ui/useDisableScrollBody';
+import { Brand, useBrandList } from "@/hooks/brands";
+import useDisableScrollBody from "@/hooks/ui/useDisableScrollBody";
 
 // Utils
-import { getBrandScoreVariation } from '@/utils/brand';
+import { getBrandScoreVariation } from "@/utils/brand";
 
 // Assets
-import FeatureFarcasterBrand from '@/assets/images/feature-farcaster-brand.svg?react';
+import FeatureFarcasterBrand from "@/assets/images/feature-farcaster-brand.svg?react";
 
 function TrendBrands() {
   const navigate = useNavigate();
-  const { data, refetch } = useBrandList('top', '', 1, 10);
+  const { data, refetch } = useBrandList("top", "", 1, 10);
   useDisableScrollBody();
-  
+
   useEffect(() => {
     refetch();
   }, []);
@@ -36,20 +38,22 @@ function TrendBrands() {
    * @default undefined
    * @returns {Brand | undefined} The main brand or undefined if no brands are available.
    */
-  const mainBrand = useMemo<Brand | undefined>(() => data?.brands?.[0], [data?.brands]);
+  const mainBrand = useMemo<Brand | undefined>(
+    () => data?.brands?.[0],
+    [data?.brands]
+  );
 
   /**
    * Handles the click event on a brand card and navigates to the brand's page.
    *
    * @param {Brand['id']} id - The ID of the brand.
    */
-  const handleClickCard = useCallback((id: Brand['id']) => {
+  const handleClickCard = useCallback((id: Brand["id"]) => {
     navigate(`/brand/${id}`);
   }, []);
-  
+
   return (
     <div className={styles.layout}>
-
       {mainBrand && (
         <div className={styles.inner}>
           <div className={styles.feature}>
@@ -58,9 +62,9 @@ function TrendBrands() {
             </div>
             <div className={styles.brand}>
               <BrandCard
-                size={'l'}
+                size={"l"}
                 selected={true}
-                orientation={'center'}
+                orientation={"center"}
                 className={styles.brandCard}
                 name={mainBrand.name}
                 photoUrl={mainBrand.imageUrl}
@@ -72,8 +76,8 @@ function TrendBrands() {
           </div>
         </div>
       )}
-      
-      {(data.brands && (data.brands).length > 1) && (
+
+      {data.brands && data.brands.length > 1 && (
         <ul className={styles.grid}>
           {data.brands.map((brand, index) => (
             <li key={`--brand-item-${index.toString()}`}>

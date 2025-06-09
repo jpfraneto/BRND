@@ -1,4 +1,4 @@
-// /src/pages/PodiumPage/partials/RankPodiums/index.tsx
+// /src/pages/RankingPage/partials/RankPodiums/index.tsx
 
 // Dependencies
 import { useCallback, useEffect, useState } from "react";
@@ -18,11 +18,7 @@ import useDisableScrollBody from "@/hooks/ui/useDisableScrollBody";
 // Utils
 import { getBrandScoreVariation } from "@/utils/brand";
 
-interface RankPodiumsProps {
-  period: "week" | "month" | "all";
-}
-
-function RankPodiums({ period }: RankPodiumsProps) {
+function RankPodiums() {
   const navigate = useNavigate();
   const [podiumHistory, setPodiumHistory] = useState<
     Array<{
@@ -32,16 +28,14 @@ function RankPodiums({ period }: RankPodiumsProps) {
     }>
   >([]);
 
-  // Get current top brands based on period
-  const orderType =
-    period === "week" ? "top" : period === "month" ? "all" : "all";
-  const { data, refetch } = useBrandList(orderType, "", 1, 20);
+  // Get current top brands
+  const { data, refetch } = useBrandList("top", "", 1, 20);
 
   useDisableScrollBody();
 
   useEffect(() => {
     refetch();
-  }, [period]);
+  }, []);
 
   useEffect(() => {
     // Simulate historical podium data - in real app this would come from API
@@ -113,10 +107,8 @@ function RankPodiums({ period }: RankPodiumsProps) {
                   position={brandIndex + 1}
                   name={brand.name}
                   photoUrl={brand.imageUrl}
-                  score={period === "week" ? brand.scoreWeek : brand.score}
-                  variation={getBrandScoreVariation(
-                    period === "week" ? brand.stateScoreWeek : brand.stateScore
-                  )}
+                  score={brand.scoreWeek}
+                  variation={getBrandScoreVariation(brand.stateScoreWeek)}
                   onClick={() => handleClickCard(brand.id)}
                 />
               ))}

@@ -65,7 +65,7 @@ const NavigationBar: React.FC<NavigationBarProps> = () => {
    */
   const handleClickLeaders = useCallback(() => {
     sdk.haptics.selectionChanged();
-    navigate("/leaders");
+    navigate("/leaderboard");
   }, [navigate]);
 
   /**
@@ -143,7 +143,7 @@ const NavigationBar: React.FC<NavigationBarProps> = () => {
       {/* Leaders Tab */}
       <button
         className={classNames(styles.tab, {
-          [styles.active]: isActive("/leaders"),
+          [styles.active]: isActive("/leaderboard"),
         })}
         onClick={handleClickLeaders}
       >

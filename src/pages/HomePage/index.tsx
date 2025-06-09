@@ -1,44 +1,42 @@
 // Dependencies
-import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 
 // StyleSheet
-import styles from './HomePage.module.scss';
+import styles from "./HomePage.module.scss";
 
 // Components
-import AppLayout from '../../shared/layouts/AppLayout';
-import NewBrands from './partials/NewBrands';
-import TrendBrands from './partials/TrendBrands';
-import AllBrands from './partials/AllBrands';
-import TabNavigator from '@/components/TabNavigator';
-
-// Assets
-import Logo from '@/assets/images/logo.svg';
+import AppLayout from "../../shared/layouts/AppLayout";
+import NewBrands from "./partials/NewBrands";
+import TrendBrands from "./partials/TrendBrands";
+import AllBrands from "./partials/AllBrands";
+import TabNavigator from "@/components/TabNavigator";
 
 // Hocs
-import withProtectionRoute from '@/hocs/withProtectionRoute';
+import withProtectionRoute from "@/hocs/withProtectionRoute";
+import BrandHeader from "@/shared/components/BrandHeader";
 
 function HomePage(): React.ReactNode {
   return (
     <AppLayout>
       <div className={styles.body}>
         <div className={styles.header}>
-          <img src={Logo} className={styles.logo} alt="Logo" />
+          <BrandHeader showBackButton={false} />
 
           <div className={styles.tabs}>
             <TabNavigator
               tabs={[
                 {
-                  label: 'Top',
-                  path: '/'
+                  label: "Top",
+                  path: "/",
                 },
                 {
-                  label: 'New',
-                  path: '/new'
+                  label: "New",
+                  path: "/new",
                 },
                 {
-                  label: 'All',
-                  path: '/all'
+                  label: "All",
+                  path: "/all",
                 },
               ]}
             />
@@ -54,4 +52,4 @@ function HomePage(): React.ReactNode {
   );
 }
 
-export default withProtectionRoute(HomePage, 'only-connected');
+export default withProtectionRoute(HomePage, "only-connected");

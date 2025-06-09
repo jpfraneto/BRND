@@ -13,6 +13,9 @@ import ClaimedPage from "../pages/ClaimedPage";
 // Providers
 import { AppProvider } from "../shared/providers/AppProvider";
 import PodiumPage from "@/pages/PodiumPage";
+import LeaderboardPage from "@/pages/LeaderboardPage";
+import RankingPage from "@/pages/RankingPage";
+import LoginPage from "@/pages/LoginPage";
 
 /**
  * Router configuration for Farcaster miniapp.
@@ -51,6 +54,9 @@ export const router = createBrowserRouter([
       { path: "/vote/:unixDate?", element: <VotePage /> },
       { path: "/podium", element: <PodiumPage /> },
       { path: "/claimed", element: <ClaimedPage /> },
+      { path: "/leaderboard", element: <LeaderboardPage /> },
+      { path: "/ranking", element: <RankingPage /> },
+      { path: "/login", element: <LoginPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
   },

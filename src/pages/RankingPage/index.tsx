@@ -1,12 +1,15 @@
+// /src/pages/RankingPage/index.tsx
+
 // Dependencies
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 // StyleSheet
-import styles from "./PodiumPage.module.scss";
+import styles from "./RankingPage.module.scss";
 
 // Components
 import AppLayout from "../../shared/layouts/AppLayout";
+import TopRanking from "./partials/TopRanking";
 import RankPodiums from "./partials/RankPodiums";
 import TabNavigator from "@/components/TabNavigator";
 
@@ -14,7 +17,7 @@ import TabNavigator from "@/components/TabNavigator";
 import withProtectionRoute from "@/hocs/withProtectionRoute";
 import PointsHeader from "@/shared/components/PointsHeader";
 
-function PodiumPage(): React.ReactNode {
+function RankingPage(): React.ReactNode {
   return (
     <AppLayout>
       <div className={styles.body}>
@@ -26,24 +29,23 @@ function PodiumPage(): React.ReactNode {
               tabs={[
                 {
                   label: "Rank",
-                  path: "/podium",
+                  path: "/ranking",
                 },
                 {
                   label: "Podiums",
-                  path: "/podium/podium",
+                  path: "/ranking/podiums",
                 },
               ]}
             />
           </div>
         </div>
         <Routes>
-          <Route path="/" element={<RankPodiums period="week" />} />
-          <Route path="/month" element={<RankPodiums period="month" />} />
-          <Route path="/all-time" element={<RankPodiums period="all" />} />
+          <Route path="/" element={<TopRanking />} />
+          <Route path="/podiums" element={<RankPodiums />} />
         </Routes>
       </div>
     </AppLayout>
   );
 }
 
-export default withProtectionRoute(PodiumPage, "only-connected");
+export default withProtectionRoute(RankingPage, "only-connected");

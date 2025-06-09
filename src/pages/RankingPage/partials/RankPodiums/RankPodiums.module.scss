@@ -1,0 +1,80 @@
+// /src/pages/RankingPage/partials/RankPodiums/RankPodiums.module.scss
+
+@import "@/styles/index.scss";
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 240px);
+  overflow: hidden;
+}
+
+.podiumsList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  padding-bottom: 12px;
+  flex: 1;
+}
+
+.podiumItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timeLabel {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.timeText {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.podiumGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.shareButton {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.05);
+  }
+}
+
+.shareIcon {
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}

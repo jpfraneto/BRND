@@ -1,0 +1,51 @@
+// src/shared/components/BrandHeader/BrandHeader.module.scss
+
+@import "@/styles/index.scss";
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+}
+
+.logo {
+  height: 24px;
+  width: auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.profileButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.points {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: white;
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.backBtn {
+  width: 36px;
+  height: 36px;
+}
