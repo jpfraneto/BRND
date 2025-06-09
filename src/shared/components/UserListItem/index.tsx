@@ -2,74 +2,51 @@
 
 // Dependencies
 import React from "react";
+import classNames from "clsx";
 
 // Components
 import Typography from "@/components/Typography";
 
 // StyleSheet
 import styles from "./UserListItem.module.scss";
+import { User } from "@/shared/hooks/user";
+import sdk from "@farcaster/frame-sdk";
+import BPointIcon from "@/assets/icons/point-b.svg?react";
 
 // Types
 interface UserListItemProps {
+  user: User;
   position: number;
-  name: string;
-  photoUrl: string;
-  score: number;
-  onClick?: () => void;
 }
 
-function UserListItem({
-  position,
-  name,
-  photoUrl,
-  score,
-  onClick,
-}: UserListItemProps): React.ReactNode {
+function UserListItem({ user, position }: UserListItemProps): React.ReactNode {
   const handleClick = () => {
-    if (onClick) {
-      onClick();
-    }
-  };
-
-  const getPositionString = (pos: number): string => {
-    return pos.toString().padStart(2, "0");
+    sdk.actions.viewProfile({ fid: user.fid });
   };
 
   return (
-    <div className={styles.container} onClick={handleClick}>
-      <div className={styles.position}>
-        <Typography size={14} weight="medium" className={styles.positionText}>
-          {getPositionString(position)}
+    <button onClick={handleClick} className={styles.layout}>
+      <Typography size={14} lineHeight={14} className={styles.position}>
+        {position}
+      </Typography>
+      <div className={styles.row}>
+        <img
+          className={styles.img}
+          src={user.photoUrl}
+          width={32}
+          height={32}
+        />
+        <Typography size={14} lineHeight={18}>
+          {user.username}
         </Typography>
       </div>
-
-      <div className={styles.userInfo}>
-        <div className={styles.avatar}>
-          <img
-            src={photoUrl}
-            alt={name}
-            className={styles.avatarImage}
-            onError={(e) => {
-              // Fallback to a default avatar if image fails to load
-              (e.target as HTMLImageElement).src = "/default-avatar.png";
-            }}
-          />
-        </div>
-
-        <div className={styles.details}>
-          <Typography size={16} weight="medium" className={styles.name}>
-            {name}
-          </Typography>
-        </div>
-      </div>
-
-      <div className={styles.score}>
-        <Typography size={16} weight="bold" className={styles.scoreText}>
-          {score}
+      <div className={classNames(styles.row, styles.score)}>
+        <Typography size={14} lineHeight={14} className={styles.scoreText}>
+          {user.points}
         </Typography>
-        <div className={styles.scoreIcon}>🏁</div>
       </div>
-    </div>
+      <BPointIcon width={15} height={12} color="#fff" />
+    </button>
   );
 }
 
