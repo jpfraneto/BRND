@@ -18,7 +18,7 @@ import useDisableScrollBody from "@/hooks/ui/useDisableScrollBody";
 // Utils
 import { getBrandScoreVariation } from "@/utils/brand";
 
-function RankPodiums() {
+const RankPodiums = () => {
   const navigate = useNavigate();
   const [podiumHistory, setPodiumHistory] = useState<
     Array<{
@@ -135,6 +135,6 @@ function RankPodiums() {
       </div>
     </div>
   );
-}
+};
 
 export default RankPodiums;

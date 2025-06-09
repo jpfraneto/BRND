@@ -1,29 +1,29 @@
 // Dependencies
-import { useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useCallback } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 // Hooks
-import { Brand, useVoteBrands } from '@/hooks/brands';
+import { Brand, useVoteBrands } from "@/hooks/brands";
 
 // Components
-import Podium from '@/components/Podium';
-import Typography from '@/components/Typography';
-import Button from '@/components/Button';
-import IconButton from '@/components/IconButton';
+import Podium from "@/components/Podium";
+import Typography from "@/components/Typography";
+import Button from "@/components/Button";
+import IconButton from "@/components/IconButton";
 
 // Types
-import { VotingViewEnum, VotingViewProps } from '../../types';
+import { VotingViewEnum, VotingViewProps } from "../../types";
 
 // StyleSheet
-import styles from './PodiumView.module.scss';
+import styles from "./PodiumView.module.scss";
 
 // Assets
-import Logo from '@/assets/images/logo.svg';
-import GoBackIcon from '@/assets/icons/go-back-icon.svg?react';
+import Logo from "@/assets/images/logo.svg";
+import GoBackIcon from "@/assets/icons/go-back-icon.svg?react";
 
 // Hooks
-import { ModalsIds, useModal } from '@/hooks/ui';
+import { ModalsIds, useModal } from "@/hooks/ui";
 
 interface PodiumViewProps extends VotingViewProps {}
 
@@ -34,22 +34,24 @@ export default function PodiumView({ navigateToView }: PodiumViewProps) {
 
   /**
    * Handles the submission of votes for the selected brands.
-   * 
+   *
    * @param {Brand[]} brands - An array of selected brands.
    */
-  const handleSubmitVote = useCallback((brands: Brand[]) => {
-    voteBrands.mutate({
-      ids: [
-        brands[1].id,
-        brands[0].id,
-        brands[2].id
-      ]
-    }, {
-      onSuccess: (response) => {
-        navigateToView(VotingViewEnum.SHARE, brands, response.id);
-      }
-    });
-  }, [voteBrands, navigateToView]);
+  const handleSubmitVote = useCallback(
+    (brands: Brand[]) => {
+      voteBrands.mutate(
+        {
+          ids: [brands[1].id, brands[0].id, brands[2].id],
+        },
+        {
+          onSuccess: (response) => {
+            navigateToView(VotingViewEnum.SHARE, brands, response.id);
+          },
+        }
+      );
+    },
+    [voteBrands, navigateToView]
+  );
 
   /**
    * Handles the click event for the "How to Score" button.
@@ -62,40 +64,56 @@ export default function PodiumView({ navigateToView }: PodiumViewProps) {
    */
   const handleClickHowToScore = useCallback(() => {
     openModal(ModalsIds.BOTTOM_ALERT, {
-      title: 'How to score',
+      title: "How to score",
       content: (
         <div className={styles.list}>
-          <Typography size={14} lineHeight={18}>You have 100 points to build your first podium brands:</Typography>
-          <Typography size={16} weight={'regular'} lineHeight={20}>🥇 60</Typography>
-          <Typography size={16} weight={'regular'} lineHeight={20}>🥈 30</Typography>
-          <Typography size={16} weight={'regular'} lineHeight={20}>🥉 10</Typography>
+          <Typography size={14} lineHeight={18}>
+            You have 100 points to build your first podium brands:
+          </Typography>
+          <Typography size={16} weight={"regular"} lineHeight={20}>
+            🥇 60
+          </Typography>
+          <Typography size={16} weight={"regular"} lineHeight={20}>
+            🥈 30
+          </Typography>
+          <Typography size={16} weight={"regular"} lineHeight={20}>
+            🥉 10
+          </Typography>
         </div>
-      )
+      ),
     });
   }, [openModal]);
-  
+
   return (
     <div className={styles.body}>
-      <motion.div 
+      <motion.div
         className={styles.container}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.5 }}>
+        transition={{ duration: 1, delay: 0.5 }}
+      >
         <IconButton
-          variant={'solid'} 
+          variant={"solid"}
           icon={<GoBackIcon />}
-          onClick={() => navigate('/')} 
+          onClick={() => navigate("/")}
           className={styles.backBtn}
         />
         <div className={styles.center}>
           <img src={Logo} className={styles.logo} alt="Logo" />
-          <Typography size={18} lineHeight={24} variant={'druk'} weight={'text-wide'}>Add your top brands on this podium</Typography>
+          <Typography
+            size={18}
+            lineHeight={24}
+            variant={"druk"}
+            weight={"text-wide"}
+          >
+            Add your top brands on this podium
+          </Typography>
           <div className={styles.actions}>
-            <Button 
-              variant={'underline'}
-              className={styles.howToScore} 
-              onClick={handleClickHowToScore} 
-              caption={'How to score'}
+            <Button
+              variant={"underline"}
+              className={styles.howToScore}
+              onClick={handleClickHowToScore}
+              caption={"How to score"}
             />
           </div>
         </div>

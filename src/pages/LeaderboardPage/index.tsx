@@ -88,7 +88,7 @@ function LeaderboardPage(): React.ReactNode {
             </ul>
           )}
 
-          <div className={styles.shareSection}>
+          <div className={styles.footer}>
             <Button
               caption="Share leaderboard"
               variant="primary"

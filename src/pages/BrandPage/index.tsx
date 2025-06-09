@@ -317,6 +317,7 @@ function BrandPage() {
           <div className={styles.footer}>
             <Button
               caption={"Add To Podium"}
+              variant="primary"
               iconLeft={<FavoriteIcon />}
               onClick={() => navigate("/vote")}
             />

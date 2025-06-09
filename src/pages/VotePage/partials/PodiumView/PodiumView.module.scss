@@ -7,7 +7,7 @@
   @include baseLayout();
   padding-left: 14px;
   padding-right: 14px;
-  padding-top: 48px;
+  padding-top: 44px;
   gap: 32px;
   overflow: hidden;
 }
@@ -67,4 +67,7 @@
 .backBtn {
   width: 36px;
   height: 36px;
+  position: absolute;
+  top: 38px;
+  left: 22px;
 }

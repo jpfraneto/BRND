@@ -28,7 +28,6 @@ interface PointsHeaderProps {
   showBackButton?: boolean;
   backButtonPath?: string;
   className?: string;
-  onHowItWorksClick?: () => void;
   onBackClick?: () => void;
 }
 
@@ -38,7 +37,6 @@ const PointsHeader: React.FC<PointsHeaderProps> = ({
   showBackButton = true,
   backButtonPath = "/",
   className,
-  onHowItWorksClick,
   onBackClick,
 }) => {
   const navigate = useNavigate();
@@ -49,13 +47,8 @@ const PointsHeader: React.FC<PointsHeaderProps> = ({
   }, [navigate]);
 
   const handleHowItWorks = useCallback(() => {
-    if (onHowItWorksClick) {
-      onHowItWorksClick();
-    } else {
-      // Default behavior - open how it works URL
-      window.open(URL_HOW_IT_WORKS, "_blank");
-    }
-  }, [onHowItWorksClick]);
+    navigate("/welcome");
+  }, [navigate]);
 
   const handleBackClick = useCallback(() => {
     sdk.haptics.selectionChanged();

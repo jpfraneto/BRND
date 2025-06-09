@@ -79,7 +79,8 @@
   }
 }
 
-.center, .bottom {
+.center,
+.bottom {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,12 +99,12 @@
 }
 
 .label {
-  color: #8A8A8A;
+  color: #8a8a8a;
   text-transform: uppercase;
 }
 
 .grey {
-  color: #8A8A8A;
+  color: #8a8a8a;
 }
 
 .profile {
@@ -133,13 +134,12 @@
   }
 }
 
-
 .box {
   height: auto !important;
   aspect-ratio: unset !important;
-  
+
   > div {
-    height: auto !important; 
+    height: auto !important;
   }
 
   &.casts {
@@ -173,8 +173,8 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 80px;
-
+  bottom: 100px;
+  width: 90vw;
   @include baseLayout();
   z-index: 50;
 }
@@ -192,24 +192,24 @@
   gap: 4px;
 
   &.up {
-    color: #00FF00;
+    color: #00ff00;
 
-    background: #00FF0026;
-    border: 1px solid #FFFFFF1A;
-    color: #00FF00;
+    background: #00ff0026;
+    border: 1px solid #ffffff1a;
+    color: #00ff00;
 
     svg {
-      color: #00FF00;
+      color: #00ff00;
     }
   }
 
   &.equal {
     background: rgb(0 136 255 / 15%);
     border: 1px solid rgb(255 255 255 / 10%);
-    color: #008CFF;
+    color: #008cff;
 
     svg {
-      color: #008CFF;
+      color: #008cff;
       top: -1px;
       position: relative;
     }
@@ -221,7 +221,7 @@
     color: #ff0000;
 
     svg {
-      color: #FF0000;
+      color: #ff0000;
       transform: rotate(180deg);
     }
   }
@@ -234,4 +234,3 @@
     margin-left: auto;
   }
 }
-

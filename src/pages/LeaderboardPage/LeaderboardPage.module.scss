@@ -85,3 +85,13 @@
 .shareText {
   color: white;
 }
+
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 100px;
+  width: 90vw;
+  @include baseLayout();
+  z-index: 50;
+}

@@ -31,17 +31,17 @@ function RankingPage(): React.ReactNode {
                   label: "Rank",
                   path: "/ranking",
                 },
-                {
-                  label: "Podiums",
-                  path: "/ranking/podiums",
-                },
+                // {
+                //   label: "Podiums",
+                //   path: "/ranking/podiums",
+                // },
               ]}
             />
           </div>
         </div>
         <Routes>
           <Route path="/" element={<TopRanking />} />
-          <Route path="/podiums" element={<RankPodiums />} />
+          {/* <Route path="/podiums" element={<RankPodiums />} /> */}
         </Routes>
       </div>
     </AppLayout>
