@@ -11,9 +11,10 @@ import AppLayout from "../../shared/layouts/AppLayout";
 import Typography from "@/components/Typography";
 import UserListItem from "@/shared/components/UserListItem";
 import BrandHeader from "@/shared/components/BrandHeader";
+import Button from "@/components/Button";
 
 // Assets
-import ShareIcon from "@/assets/icons/share-icon.svg";
+// import ShareIcon from "@/assets/icons/share-icon.svg";
 
 // Hooks
 import { useUserLeaderboard } from "@/shared/hooks/user/useUserLeaderboard";
@@ -88,19 +89,12 @@ function LeaderboardPage(): React.ReactNode {
           )}
 
           <div className={styles.shareSection}>
-            <button
-              className={styles.shareButton}
+            <Button
+              caption="Share leaderboard"
+              variant="primary"
+              // iconLeft={<ShareIcon />}
               onClick={handleShareLeaderboard}
-            >
-              <img src={ShareIcon} className={styles.shareIcon} alt="Share" />
-              <Typography
-                size={16}
-                weight="medium"
-                className={styles.shareText}
-              >
-                Share leaderboard
-              </Typography>
-            </button>
+            />
           </div>
         </div>
       </div>

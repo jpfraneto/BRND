@@ -7,12 +7,12 @@ import styles from "./PodiumPage.module.scss";
 
 // Components
 import AppLayout from "../../shared/layouts/AppLayout";
-import RankPodiums from "./partials/RankPodiums";
 import TabNavigator from "@/components/TabNavigator";
 
 // Hocs
 import withProtectionRoute from "@/hocs/withProtectionRoute";
 import PointsHeader from "@/shared/components/PointsHeader";
+import UserPodiums from "./partials/UserPodiums";
 
 function PodiumPage(): React.ReactNode {
   return (
@@ -25,21 +25,19 @@ function PodiumPage(): React.ReactNode {
             <TabNavigator
               tabs={[
                 {
-                  label: "Rank",
+                  label: "Podiums",
                   path: "/podium",
                 },
-                {
-                  label: "Podiums",
-                  path: "/podium/podium",
-                },
+                // {
+                //   label: "Podiums",
+                //   path: "/podium/podium",
+                // },
               ]}
             />
           </div>
         </div>
         <Routes>
-          <Route path="/" element={<RankPodiums period="week" />} />
-          <Route path="/month" element={<RankPodiums period="month" />} />
-          <Route path="/all-time" element={<RankPodiums period="all" />} />
+          <Route path="/" element={<UserPodiums period="week" />} />
         </Routes>
       </div>
     </AppLayout>

@@ -3,10 +3,9 @@
 .body {
   display: flex;
   flex-direction: column;
-  flex: 1;
   @include baseLayout();
   gap: 32px;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   padding: 0 12px;
 }

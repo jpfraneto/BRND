@@ -1,85 +1,122 @@
-// /src/components/cards/PodiumCard/PodiumCard.module.scss
+// src/shared/components/PodiumCard/PodiumCard.module.scss
 
 @import "@/styles/index.scss";
 
-.card {
+.podiumCard {
   display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  align-items: center;
+  gap: 12px;
+  background: #16181d;
+  border: 1px solid #2f2f2f;
   border-radius: 12px;
   padding: 12px;
+  margin-bottom: 12px;
+}
+
+.brands {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.brandCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  width: 100%;
-  min-height: 120px;
+  flex: 1;
+  min-width: 0;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.firstPlace,
-.secondPlace,
-.thirdPlace {
+.position {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 2px;
 }
 
-.scoreContainer {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.first .position {
+  background: linear-gradient(135deg, #ffd700, #ffa500);
 }
 
-.score {
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
+.second .position {
+  background: linear-gradient(135deg, #c0c0c0, #a0a0a0);
 }
 
-.variation {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.third .position {
+  background: linear-gradient(135deg, #cd7f32, #b8860b);
+}
+
+.positionText {
+  color: #000;
+  font-size: 8px;
+  line-height: 1;
 }
 
 .brandImage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  margin: 8px 0;
-}
-
-.image {
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.footer {
+.brandName {
+  color: white;
   text-align: center;
-  margin-top: 8px;
-}
-
-.name {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 11px;
-  font-weight: 500;
   line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
+  max-width: 60px;
+}
+
+.brandScore {
+  color: #8a8a8a;
+  font-size: 8px;
+}
+
+.shareSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.date {
+  color: #8a8a8a;
+  white-space: nowrap;
+}
+
+.shareButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.shareIcon {
+  width: 12px;
+  height: 12px;
 }

@@ -1,5 +1,3 @@
-// /src/pages/PodiumPage/partials/RankPodiums/RankPodiums.module.scss
-
 @import "@/styles/index.scss";
 
 .layout {
@@ -46,17 +44,16 @@
 .podiumsList {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 12px;
   overflow-y: auto;
   padding-bottom: 12px;
   flex: 1;
 }
 
 .podiumItem {
-  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .timeLabel {
@@ -69,21 +66,38 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+// This is the key container that creates the 80/20 split
+.podiumRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.podiumContent {
+  flex: 1; // Takes up remaining space (80%)
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .podiumGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  width: 100%;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 60px; // Fixed width for consistent layout (~20% of typical mobile width)
+  flex-shrink: 0;
 }
 
 .shareButton {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -97,7 +111,11 @@
 
   &:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-50%) scale(1.05);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 }
 
@@ -111,4 +129,12 @@
     width: 16px;
     height: 16px;
   }
+}
+
+.timeAgoText {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
 }

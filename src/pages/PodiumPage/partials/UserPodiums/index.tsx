@@ -1,12 +1,13 @@
-// /src/pages/PodiumPage/partials/RankPodiums/index.tsx
-
 // Dependencies
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Components
-import PodiumCard from "@/components/cards/PodiumCard";
+import BrandCard from "@/components/cards/BrandCard";
 import Typography from "@/components/Typography";
+
+// Assets
+import ShareIcon from "@/assets/icons/share-icon.svg?react";
 
 // StyleSheet
 import styles from "./RankPodiums.module.scss";
@@ -22,7 +23,7 @@ interface RankPodiumsProps {
   period: "week" | "month" | "all";
 }
 
-function RankPodiums({ period }: RankPodiumsProps) {
+function UserPodiums({ period }: RankPodiumsProps) {
   const navigate = useNavigate();
   const [podiumHistory, setPodiumHistory] = useState<
     Array<{
@@ -94,50 +95,61 @@ function RankPodiums({ period }: RankPodiumsProps) {
       <div className={styles.podiumsList}>
         {podiumHistory.map((podium, index) => (
           <div key={`podium-${index}`} className={styles.podiumItem}>
-            {podium.timeAgo && (
-              <div className={styles.timeLabel}>
-                <Typography
-                  size={12}
-                  weight="medium"
-                  className={styles.timeText}
+            {/* Time label for non-current podiums */}
+
+            <div className={styles.podiumRow}>
+              {/* Left section - 80% width */}
+              <div className={styles.podiumContent}>
+                <div className={styles.podiumGrid}>
+                  {podium.brands.slice(0, 3).map((brand, brandIndex) => (
+                    <BrandCard
+                      key={`podium-${index}-brand-${brandIndex}`}
+                      name={brand.name}
+                      photoUrl={brand.imageUrl}
+                      orientation={
+                        brandIndex % 3 === 0
+                          ? "left"
+                          : brandIndex % 3 === 1
+                          ? "center"
+                          : "right"
+                      }
+                      score={period === "week" ? brand.scoreWeek : brand.score}
+                      variation={getBrandScoreVariation(
+                        period === "week"
+                          ? brand.stateScoreWeek
+                          : brand.stateScore
+                      )}
+                      size="s"
+                      onClick={() => handleClickCard(brand.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Right section - 20% width */}
+              <div className={styles.rightSection}>
+                <button
+                  className={styles.shareButton}
+                  onClick={() => handleShare(index)}
+                  aria-label={`Share podium ${index + 1}`}
                 >
-                  {podium.timeAgo}
-                </Typography>
-              </div>
-            )}
+                  <div className={styles.shareIcon}>
+                    <ShareIcon />
+                  </div>
+                </button>
 
-            <div className={styles.podiumGrid}>
-              {podium.brands.slice(0, 3).map((brand, brandIndex) => (
-                <PodiumCard
-                  key={`podium-${index}-brand-${brandIndex}`}
-                  position={brandIndex + 1}
-                  name={brand.name}
-                  photoUrl={brand.imageUrl}
-                  score={period === "week" ? brand.scoreWeek : brand.score}
-                  variation={getBrandScoreVariation(
-                    period === "week" ? brand.stateScoreWeek : brand.stateScore
-                  )}
-                  onClick={() => handleClickCard(brand.id)}
-                />
-              ))}
+                {/* Time ago text in the right section */}
+                {podium.timeAgo && (
+                  <Typography
+                    size={10}
+                    weight="medium"
+                    className={styles.timeAgoText}
+                  >
+                    {podium.timeAgo}
+                  </Typography>
+                )}
+              </div>
             </div>
-
-            <button
-              className={styles.shareButton}
-              onClick={() => handleShare(index)}
-            >
-              <div className={styles.shareIcon}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path
-                    d="M8 1L8 11M8 1L4 5M8 1L12 5M3 12L13 12"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            </button>
           </div>
         ))}
       </div>
@@ -145,4 +157,4 @@ function RankPodiums({ period }: RankPodiumsProps) {
   );
 }
 
-export default RankPodiums;
+export default UserPodiums;

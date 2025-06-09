@@ -9,18 +9,23 @@
   transition: all 200ms linear;
   position: relative;
   border-radius: 12px;
-  border: 1px solid #2F2F2F;
+  border: 1px solid #2f2f2f;
 
   cursor: pointer;
   color: #fff;
   flex: 1;
 
-  &.selected, &.disabled {
+  &.selected,
+  &.disabled {
     padding: 2px;
     border: transparent;
     @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
+      0% {
+        background-position: 0% 50%;
+      }
+      100% {
+        background-position: 100% 50%;
+      }
     }
 
     .container {
@@ -43,10 +48,14 @@
   inset: 0;
   border-radius: 12px;
   padding: 2px;
-  background: linear-gradient(154.5deg, #FF9533 2.43%, #FF0000 26.41%, #0C00FF 74.37%, #00FF00 98.35%);
-  -webkit-mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
+  background: linear-gradient(
+    154.5deg,
+    #ff9533 2.43%,
+    #ff0000 26.41%,
+    #0c00ff 74.37%,
+    #00ff00 98.35%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }
@@ -54,7 +63,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  background-color: #0A0B0D;
+  background-color: #0a0b0d;
   padding: 12px;
   transition: all 200ms linear;
   border-radius: 13px;
@@ -75,7 +84,13 @@
     opacity: 0;
     content: "";
     position: absolute;
-    background: linear-gradient(90.03deg, #FF9533 7.38%, #FF0000 35.51%, #0C00FF 63.64%, #00FF00 92.62%);
+    background: linear-gradient(
+      90.03deg,
+      #ff9533 7.38%,
+      #ff0000 35.51%,
+      #0c00ff 63.64%,
+      #00ff00 92.62%
+    );
     z-index: 10;
     filter: blur(24px);
     left: 14%;
@@ -94,7 +109,6 @@
   }
 }
 
-
 .score {
   display: flex;
   width: 14px;
@@ -105,15 +119,15 @@
   color: #fff;
 
   .equal {
-    color: #008CFF;
+    color: #008cff;
   }
-  
+
   .up {
-    color: #00FF00;
+    color: #00ff00;
   }
-  
+
   .down {
-    color: #FF0000;
+    color: #ff0000;
     transform: rotate(180deg);
   }
 }
