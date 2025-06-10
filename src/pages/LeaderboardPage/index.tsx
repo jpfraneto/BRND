@@ -1,6 +1,6 @@
 // src/pages/LeaderboardPage/index.tsx
 
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 
 // StyleSheet
 import styles from "./LeaderboardPage.module.scss";
@@ -10,7 +10,7 @@ import AppLayout from "../../shared/layouts/AppLayout";
 import Typography from "@/components/Typography";
 import UserListItem from "@/shared/components/UserListItem";
 import BrandHeader from "@/shared/components/BrandHeader";
-import Button from "@/components/Button";
+// import Button from "@/components/Button";
 
 // Assets
 // import ShareIcon from "@/assets/icons/share-icon.svg";
@@ -308,10 +308,10 @@ function LeaderboardPage(): React.ReactNode {
   /**
    * Handles sharing the leaderboard
    */
-  const handleShareLeaderboard = useCallback(() => {
-    // Implement share functionality
-    console.log("Share leaderboard");
-  }, []);
+  // const handleShareLeaderboard = useCallback(() => {
+  //   // Implement share functionality
+  //   console.log("Share leaderboard");
+  // }, []);
 
   return (
     <AppLayout>
@@ -342,14 +342,14 @@ function LeaderboardPage(): React.ReactNode {
             </ul>
           )}
 
-          <div className={styles.footer}>
+          {/* <div className={styles.footer}>
             <Button
               caption="Share leaderboard"
               variant="primary"
               // iconLeft={<ShareIcon />}
               onClick={handleShareLeaderboard}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </AppLayout>

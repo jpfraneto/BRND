@@ -12,6 +12,66 @@ import { Brand, BrandCast } from "../shared/hooks/brands";
    ======================================= */
 
 /**
+ * Interface for public podium data
+ */
+export interface PublicPodium {
+  id: string;
+  date: string;
+  createdAt: string;
+  user: {
+    fid: number;
+    username: string;
+    photoUrl: string;
+  };
+  brands: Array<{
+    id: number;
+    name: string;
+    imageUrl: string;
+    score: number;
+    ranking: number;
+  }>;
+  pointsAwarded: number;
+}
+
+/**
+ * Response structure for recent podiums API
+ */
+export interface RecentPodiumsResponse {
+  podiums: PublicPodium[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+}
+
+/**
+ * Fetches recent podiums from all users (public feed).
+ *
+ * @param {number} page - Page number for pagination
+ * @param {number} limit - Number of podiums per page
+ * @returns {Promise<RecentPodiumsResponse>} Recent podiums with pagination info
+ */
+export const getRecentPodiums = async (
+  page: number = 1,
+  limit: number = 20
+): Promise<RecentPodiumsResponse> => {
+  return await request<RecentPodiumsResponse>(
+    `${BRAND_SERVICE}/recent-podiums`,
+    {
+      method: "GET",
+      params: {
+        page: page.toString(),
+        limit: limit.toString(),
+      },
+    }
+  );
+};
+
+/**
  * Defines the structure of the response returned by the getMe API.
  *
  * @property {User} data - Contains the user information retrieved.

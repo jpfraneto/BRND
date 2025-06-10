@@ -56,6 +56,7 @@ export function AppProvider(): JSX.Element {
 
         // Obtain QuickAuth token from Farcaster
         const { token: newToken } = await sdk.quickAuth.getToken();
+        console.log("THE NEW TOKEN IS", newToken);
         setToken(newToken);
         setFarcasterToken(newToken);
         console.log("QuickAuth token obtained");

@@ -106,7 +106,7 @@ const NavigationBar: React.FC<NavigationBarProps> = () => {
           <PodiumIcon className={styles.icon} />
         </div>
         <Typography size={10} weight="medium" className={styles.label}>
-          Podium
+          Podiums
         </Typography>
       </button>
 

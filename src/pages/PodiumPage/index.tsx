@@ -1,4 +1,3 @@
-// Dependencies
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -8,11 +7,11 @@ import styles from "./PodiumPage.module.scss";
 // Components
 import AppLayout from "../../shared/layouts/AppLayout";
 import TabNavigator from "@/components/TabNavigator";
+import PointsHeader from "@/shared/components/PointsHeader";
+import PublicPodiumsFeed from "./partials/PublicPodiumsFeed";
 
 // Hocs
 import withProtectionRoute from "@/hocs/withProtectionRoute";
-import PointsHeader from "@/shared/components/PointsHeader";
-import UserPodiums from "./partials/UserPodiums";
 
 function PodiumPage(): React.ReactNode {
   return (
@@ -28,16 +27,12 @@ function PodiumPage(): React.ReactNode {
                   label: "Podiums",
                   path: "/podium",
                 },
-                // {
-                //   label: "Podiums",
-                //   path: "/podium/podium",
-                // },
               ]}
             />
           </div>
         </div>
         <Routes>
-          <Route path="/" element={<UserPodiums period="week" />} />
+          <Route path="/" element={<PublicPodiumsFeed />} />
         </Routes>
       </div>
     </AppLayout>
