@@ -10,7 +10,6 @@ import styles from "./RankingPage.module.scss";
 // Components
 import AppLayout from "../../shared/layouts/AppLayout";
 import TopRanking from "./partials/TopRanking";
-import RankPodiums from "./partials/RankPodiums";
 import TabNavigator from "@/components/TabNavigator";
 
 // Hocs

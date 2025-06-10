@@ -1,0 +1,6 @@
+{
+  "domain": "brnd",
+  "buildCommand": "yarn run build",
+  "buildDir": "dist",
+  "siteId": "d0b423bd-9eda-4f14-b597-1a4f577fdc79"
+}

@@ -23,6 +23,7 @@ import ArrowRightIcon from "@/assets/icons/arrow-right.svg?react";
 
 // Hocs
 import withProtectionRoute from "@/hocs/withProtectionRoute";
+import sdk from "@farcaster/frame-sdk";
 
 /**
  * An array of steps for the welcome page tutorial.
@@ -87,6 +88,7 @@ function WelcomePage(): React.ReactNode {
    * @returns {void}
    */
   const handleClickNext = useCallback((): void => {
+    sdk.haptics.selectionChanged();
     if (stepId < steps.length - 1) {
       setStepId(stepId + 1);
     } else {

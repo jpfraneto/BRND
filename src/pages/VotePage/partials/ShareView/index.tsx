@@ -107,7 +107,7 @@ export default function ShareView({
           weight={"wide"}
           className={styles.title}
         >
-          Share on miniapp
+          Share on farcaster
         </Typography>
       </div>
       <div className={styles.box}>

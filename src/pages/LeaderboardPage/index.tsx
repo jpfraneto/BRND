@@ -1,7 +1,6 @@
 // src/pages/LeaderboardPage/index.tsx
 
 import React, { useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 // StyleSheet
 import styles from "./LeaderboardPage.module.scss";
@@ -23,7 +22,6 @@ import useDisableScrollBody from "@/hooks/ui/useDisableScrollBody";
 // Hocs
 import withProtectionRoute from "@/hocs/withProtectionRoute";
 import { User, UserRoleEnum } from "@/shared/hooks/user";
-import sdk from "@farcaster/frame-sdk";
 
 const mockLeaderboard: User[] = [
   {
@@ -300,25 +298,12 @@ const mockLeaderboard: User[] = [
   },
 ];
 function LeaderboardPage(): React.ReactNode {
-  const navigate = useNavigate();
-  const { data, refetch } = useUserLeaderboard(1, 50);
+  const { refetch } = useUserLeaderboard(1, 50);
   useDisableScrollBody();
 
   useEffect(() => {
     refetch();
   }, []);
-
-  /**
-   * Handles the click event on a user item and navigates to the user's profile.
-   *
-   * @param {User['id']} id - The ID of the user.
-   */
-  const handleClickUser = useCallback(
-    (id: User["id"]) => {
-      navigate(`/user/${id}`);
-    },
-    [navigate]
-  );
 
   /**
    * Handles sharing the leaderboard

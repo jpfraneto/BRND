@@ -23,6 +23,7 @@ import useBottomSheet from "@/hooks/ui/useBottomSheet";
 
 // Utils
 import { getBrandScoreVariation } from "@/utils/brand";
+import sdk from "@farcaster/frame-sdk";
 
 interface BrandsListProps {
   readonly value?: Brand["id"][];
@@ -146,8 +147,10 @@ export default function BrandsList({
                 {...(isSelectable
                   ? {
                       selected: selected?.id === brand.id,
-                      onClick: () =>
-                        setSelected(selected?.id === brand.id ? null : brand),
+                      onClick: () => {
+                        sdk.haptics.selectionChanged();
+                        setSelected(selected?.id === brand.id ? null : brand);
+                      },
                     }
                   : {
                       onClick: () => navigate(`/brand/${brand.id}`),
@@ -193,7 +196,10 @@ export default function BrandsList({
               <Button
                 iconLeft={<CheckLabelIcon />}
                 caption={"Confirm"}
-                onClick={() => onSelect?.(selected)}
+                onClick={() => {
+                  sdk.haptics.selectionChanged();
+                  onSelect?.(selected);
+                }}
               />
             </motion.div>
           )}

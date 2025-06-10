@@ -1,30 +1,36 @@
 // Dependencies
-import { useCallback, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useCallback, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 // StyleSheet
-import styles from './Podium.module.scss';
+import styles from "./Podium.module.scss";
 
 // Components
-import PodiumColumn from './partials/PodiumColumn';
-import BrandsList from '../BrandsList';
-import Button from '../Button';
+import PodiumColumn from "./partials/PodiumColumn";
+import BrandsList from "../BrandsList";
+import Button from "../Button";
 
 // Hooks
-import useBottomSheet from '@/hooks/ui/useBottomSheet';
-import { Brand } from '@/hooks/brands';
+import useBottomSheet from "@/hooks/ui/useBottomSheet";
+import { Brand } from "@/hooks/brands";
 
 // Assets
-import SquareArrowRightIcon from '@/assets/icons/square-arrow-right.svg?react';
+import SquareArrowRightIcon from "@/assets/icons/square-arrow-right.svg?react";
+import sdk from "@farcaster/frame-sdk";
 
 interface PodiumProps {
-  variant?: 'readonly' | 'selection';
+  variant?: "readonly" | "selection";
   onVote?: (selected: Brand[]) => void;
   initial?: Brand[];
   isAnimated?: boolean;
 }
 
-function Podium({ isAnimated = true, initial = [], onVote, variant = 'selection' }: PodiumProps) {
+function Podium({
+  isAnimated = true,
+  initial = [],
+  onVote,
+  variant = "selection",
+}: PodiumProps) {
   const [selected, setSelected] = useState<Brand[]>(initial);
   const { open, close } = useBottomSheet();
 
@@ -42,14 +48,18 @@ function Podium({ isAnimated = true, initial = [], onVote, variant = 'selection'
    * @param {number} index - The index of the podium column.
    * @returns {void}
    */
-  const handleSelectBrand = useCallback((brand: Brand, index: number): void => {
-    setSelected((prevSelected) => {
-      const newSelected = [...prevSelected];
-      newSelected[index] = brand;
-      return newSelected;
-    });
-    close();
-  }, [close]);
+  const handleSelectBrand = useCallback(
+    (brand: Brand, index: number): void => {
+      sdk.haptics.selectionChanged();
+      setSelected((prevSelected) => {
+        const newSelected = [...prevSelected];
+        newSelected[index] = brand;
+        return newSelected;
+      });
+      close();
+    },
+    [close]
+  );
 
   return (
     <div className={styles.body}>
@@ -59,49 +69,68 @@ function Podium({ isAnimated = true, initial = [], onVote, variant = 'selection'
           className={styles.column}
           initial={isAnimated ? { opacity: 0, y: 50 } : {}}
           animate={isAnimated ? { opacity: 1, y: 0 } : {}}
-          transition={isAnimated ? { duration: 0.1, delay: animDelays[i] || 0, type: 'spring', stiffness: 100 } : {}}
+          transition={
+            isAnimated
+              ? {
+                  duration: 0.1,
+                  delay: animDelays[i] || 0,
+                  type: "spring",
+                  stiffness: 100,
+                }
+              : {}
+          }
         >
           <PodiumColumn
-            variant={'secondary'}
+            variant={"secondary"}
             selected={selected[i]}
-            position={i === 0 ? 2 : (i === 1 ? 1 : 3)}
-            {...(variant === 'selection' ? {
-              onClick: () => {
-                open(
-                  <div className={styles.selector}>
-                    <BrandsList 
-                      value={selected.map((brand) => brand?.id)}
-                      isSelectable={true}
-                      isFinderEnabled={true}
-                      config={{
-                        limit: 27,
-                        order: 'all'
-                      }}
-                      className={styles.list}
-                      onSelect={(brand) => handleSelectBrand(brand, i)}
-                    />
-                  </div>
-                );
-              }
-            } : {})}
+            position={i === 0 ? 2 : i === 1 ? 1 : 3}
+            {...(variant === "selection"
+              ? {
+                  onClick: () => {
+                    sdk.haptics.selectionChanged();
+                    open(
+                      <div className={styles.selector}>
+                        <BrandsList
+                          value={selected.map((brand) => brand?.id)}
+                          isSelectable={true}
+                          isFinderEnabled={true}
+                          config={{
+                            limit: 27,
+                            order: "all",
+                          }}
+                          className={styles.list}
+                          onSelect={(brand) => {
+                            sdk.haptics.selectionChanged();
+                            handleSelectBrand(brand, i);
+                          }}
+                        />
+                      </div>
+                    );
+                  },
+                }
+              : {})}
           />
         </motion.div>
       ))}
 
-      {variant === 'selection' && (
+      {variant === "selection" && (
         <AnimatePresence>
-          {(selected.length === 3) && (
-            <motion.div 
+          {selected.length === 3 && (
+            <motion.div
               className={styles.footer}
               initial={{ y: 300 }}
               animate={{ y: 0 }}
               exit={{ y: 300 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              <Button 
-                iconLeft={(<SquareArrowRightIcon />)} 
-                caption={'Let’s go!'} 
-                onClick={() => onVote?.(selected)}
+              <Button
+                iconLeft={<SquareArrowRightIcon />}
+                caption={"Let’s go!"}
+                onClick={() => {
+                  sdk.haptics.selectionChanged();
+                  console.log("HEREEE");
+                  onVote?.(selected);
+                }}
               />
             </motion.div>
           )}

@@ -47,6 +47,7 @@ const PointsHeader: React.FC<PointsHeaderProps> = ({
   }, [navigate]);
 
   const handleHowItWorks = useCallback(() => {
+    sdk.haptics.selectionChanged();
     navigate("/welcome");
   }, [navigate]);
 

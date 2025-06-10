@@ -55,7 +55,7 @@ export function AppProvider(): JSX.Element {
         console.log("Initializing Farcaster miniapp...");
 
         // Obtain QuickAuth token from Farcaster
-        const { token: newToken } = await sdk.actions.quickAuth();
+        const { token: newToken } = await sdk.quickAuth.getToken();
         setToken(newToken);
         setFarcasterToken(newToken);
         console.log("QuickAuth token obtained");
@@ -83,7 +83,7 @@ export function AppProvider(): JSX.Element {
   const signIn = async () => {
     try {
       // Get new QuickAuth token
-      const { token: newToken } = await sdk.actions.quickAuth();
+      const { token: newToken } = await sdk.quickAuth.getToken();
       setToken(newToken);
       setFarcasterToken(newToken);
 
