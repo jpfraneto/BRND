@@ -11,7 +11,6 @@ import {
   UserVote,
   UserBrand,
 } from "../shared/hooks/user";
-import { UserLeaderboardResponse } from "@/shared/hooks/user/useUserLeaderboard";
 
 /**
  * Retrieves the vote history of a user from the user service.
@@ -56,24 +55,42 @@ export const getMyVoteHistory = async (
   );
 
 /**
+ * Interface for leaderboard API response (matches backend LeaderboardResponse)
+ */
+export interface LeaderboardApiResponse {
+  users: User[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+  currentUser?: {
+    position: number;
+    points: number;
+    user: Pick<User, "id" | "fid" | "username" | "photoUrl">;
+  };
+}
+
+/**
  * Retrieves the user leaderboard with ranking and pagination.
+ * Uses authentication to also return current user's position.
  *
  * @param page - The page number for pagination (default: 1).
  * @param limit - The number of users per page (default: 50).
- * @param timeframe - The timeframe for scoring: "all" | "week" | "month" (default: "all").
- * @returns A promise that resolves with the leaderboard data including users, pagination, and current user context.
+ * @returns A promise that resolves with the leaderboard data including users, pagination, and current user position.
  */
 export const getUserLeaderboard = async (
   page: number = 1,
-  limit: number = 50,
-  timeframe: string = "all"
-) =>
-  await request<UserLeaderboardResponse>(`${USER_SERVICE}/leaderboard`, {
+  limit: number = 50
+): Promise<LeaderboardApiResponse> =>
+  await request<LeaderboardApiResponse>(`${USER_SERVICE}/leaderboard`, {
     method: "GET",
     params: {
       page: String(page),
       limit: String(limit),
-      timeframe,
     },
   });
 

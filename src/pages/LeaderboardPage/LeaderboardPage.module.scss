@@ -105,3 +105,104 @@
   overflow: auto;
   padding-bottom: 12px;
 }
+
+.userPosition {
+  color: #667eea;
+  margin-top: 4px;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.loading,
+.error,
+.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+  padding: 32px;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.emptySubtext {
+  color: #666;
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+.retryButton {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+
+  &:hover {
+    background: #ff5252;
+  }
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.loadMoreButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.paginationInfo {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.paginationText {
+  color: #666;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .loading,
+  .error,
+  .empty {
+    padding: 24px 16px;
+    height: 250px;
+  }
+
+  .loadMore {
+    padding: 16px;
+  }
+
+  .loadMoreButton {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
