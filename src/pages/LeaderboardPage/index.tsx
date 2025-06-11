@@ -305,14 +305,6 @@ function LeaderboardPage(): React.ReactNode {
     refetch();
   }, []);
 
-  /**
-   * Handles sharing the leaderboard
-   */
-  // const handleShareLeaderboard = useCallback(() => {
-  //   // Implement share functionality
-  //   console.log("Share leaderboard");
-  // }, []);
-
   return (
     <AppLayout>
       <div className={styles.body}>
@@ -341,15 +333,6 @@ function LeaderboardPage(): React.ReactNode {
               ))}
             </ul>
           )}
-
-          {/* <div className={styles.footer}>
-            <Button
-              caption="Share leaderboard"
-              variant="primary"
-              // iconLeft={<ShareIcon />}
-              onClick={handleShareLeaderboard}
-            />
-          </div> */}
         </div>
       </div>
     </AppLayout>

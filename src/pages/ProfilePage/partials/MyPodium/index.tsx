@@ -13,13 +13,10 @@ import { useMyVoteHistory } from "@/hooks/user"; // Updated import - no longer n
 // Components
 import BrandCard from "@/components/cards/BrandCard";
 import Typography from "@/components/Typography";
-import IconButton from "@/components/IconButton";
 
 // Utils
 import { getBrandScoreVariation } from "@/shared/utils/brand";
-
-// Assets
-import ShareIcon from "@/assets/icons/share-icon.svg?react";
+import LoaderIndicator from "@/shared/components/LoaderIndicator";
 
 function MyPodium() {
   const navigate = useNavigate();
@@ -60,7 +57,9 @@ function MyPodium() {
     return (
       <div className={styles.layout}>
         <div className={styles.loading}>
-          <Typography>Loading your podiums...</Typography>
+          <Typography>
+            <LoaderIndicator />
+          </Typography>
         </div>
       </div>
     );
@@ -166,20 +165,6 @@ function MyPodium() {
                           addSuffix: true,
                         })}
                   </Typography>
-                  <div className={styles.actions}>
-                    <IconButton
-                      variant={"solid"}
-                      className={styles.action}
-                      icon={<ShareIcon />}
-                      onClick={() =>
-                        navigate(
-                          `/vote/${
-                            new Date(history.data[date].date).getTime() / 1000
-                          }`
-                        )
-                      }
-                    />
-                  </div>
                 </div>
               </li>
             ))}

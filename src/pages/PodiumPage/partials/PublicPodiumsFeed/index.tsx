@@ -14,6 +14,8 @@ import { Brand } from "@/hooks/brands";
 
 // Utils
 import { getBrandScoreVariation } from "@/utils/brand";
+import { sdk } from "@farcaster/frame-sdk";
+import LoaderIndicator from "@/shared/components/LoaderIndicator";
 
 function PublicPodiumsFeed() {
   const navigate = useNavigate();
@@ -64,9 +66,7 @@ function PublicPodiumsFeed() {
   if (isLoading && currentPage === 1) {
     return (
       <div className={styles.layout}>
-        <div className={styles.loading}>
-          <Typography>Loading community podiums...</Typography>
-        </div>
+        <LoaderIndicator />
       </div>
     );
   }
@@ -104,7 +104,12 @@ function PublicPodiumsFeed() {
           <div key={podium.id} className={styles.podiumItem}>
             {/* User info header */}
             <div className={styles.podiumHeader}>
-              <div className={styles.userInfo}>
+              <div
+                className={styles.userInfo}
+                onClick={() => {
+                  sdk.actions.viewProfile({ fid: podium.user.fid });
+                }}
+              >
                 {podium.user.photoUrl && (
                   <img
                     src={podium.user.photoUrl}
@@ -120,11 +125,6 @@ function PublicPodiumsFeed() {
                     {getTimeAgo(podium.createdAt)}
                   </Typography>
                 </div>
-              </div>
-              <div className={styles.points}>
-                <Typography size={12} weight="medium">
-                  +{podium.pointsAwarded} pts
-                </Typography>
               </div>
             </div>
 
