@@ -33,6 +33,29 @@ export const getUserVotesHistory = async (id: User["id"], pageId: number) =>
   );
 
 /**
+ * Retrieves the current user's vote history using authentication.
+ * No user ID required - uses the auth token to identify the user.
+ *
+ * @param pageId - The page number for paginated vote history.
+ * @param limit - Number of records per page (default: 15).
+ * @returns A promise that resolves with an object containing the count of votes and the user's vote history data.
+ */
+export const getMyVoteHistory = async (
+  pageId: number = 1,
+  limit: number = 15
+) =>
+  await request<{ count: number; data: Record<string, UserVoteHistory> }>(
+    `${USER_SERVICE}/my-vote-history`,
+    {
+      method: "GET",
+      params: {
+        pageId: String(pageId),
+        limit: String(limit),
+      },
+    }
+  );
+
+/**
  * Retrieves the user leaderboard with ranking and pagination.
  *
  * @param page - The page number for pagination (default: 1).

@@ -37,6 +37,7 @@ const BrandHeader: React.FC<BrandHeaderProps> = ({
   const { data } = useAuth();
 
   const handleClickProfile = useCallback(() => {
+    sdk.haptics.selectionChanged();
     navigate("/profile");
   }, [navigate]);
 

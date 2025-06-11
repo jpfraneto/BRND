@@ -7,11 +7,11 @@
   "frame": {
     "version": "1",
     "name": "BRND",
-    "iconUrl": "https://brnd.lat/icon.png",
-    "homeUrl": "https://brnd.lat",
-    "imageUrl": "https://brnd.lat/image.png",
+    "iconUrl": "https://github.com/jpfraneto/images/blob/main/brndsplash.png?raw=true",
+    "homeUrl": "https://miniapp.anky.app",
+    "imageUrl": "https://github.com/jpfraneto/images/blob/main/image.png?raw=true",
     "buttonTitle": "Vote your Brand",
-    "splashImageUrl": "https://brnd.lat/splash.png",
+    "splashImageUrl": "https://github.com/jpfraneto/images/blob/main/brndsplash.png?raw=true",
     "splashBackgroundColor": "#000000",
     "webhookUrl": "https://api.brnd.lat/webhook"
   }

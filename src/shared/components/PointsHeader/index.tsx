@@ -43,6 +43,7 @@ const PointsHeader: React.FC<PointsHeaderProps> = ({
   const { data } = useAuth();
 
   const handleClickProfile = useCallback(() => {
+    sdk.haptics.selectionChanged();
     navigate("/profile");
   }, [navigate]);
 
