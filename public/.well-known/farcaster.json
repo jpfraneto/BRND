@@ -1,8 +1,8 @@
 {
   "accountAssociation": {
-    "header": "eyJmaWQiOjgxMDksInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg4MTgwMkNFNTgxQzY0QjQ0NjBhN2RFMkNhMkZmNjdCM2FiREYzQTlCIn0",
-    "payload": "eyJkb21haW4iOiJicm5kLmxhbmQifQ",
-    "signature": "MHg0MjczZTYzZjU0MDVkYjhhNDAwMzJkMGFiMTllMTM2N2Q4ZTI4YzhlMDBjNWRiYTI3YjYxNjlmNjA4YmU3ODU0MjRlMTljNDllZjUxM2EyYThmMTNhZjMzNTRlZDBhNWMyZjI1NjRkYmIwYzYyZjlkZTNlMDg0YjY2MDU2MGQyMzFi"
+    "header": "eyJmaWQiOjE2MDk4LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4YUIyMERlOGY1QTRmOGUxNDdCYWFDOUQxZjZlMjM2ODYxNDg1NTE2QSJ9",
+    "payload": "eyJkb21haW4iOiJicm5kLmxhdCJ9",
+    "signature": "MHhiM2RiMTYxNTQ3NDE5NGQxZmYyMjk1M2RmNGU4ZjEwZjhkZGYwMDRjMWJmZDBlZGYwOTBiNTM4ZWQ1NDQ0NWVkNzNlMjEwODg0ZmMwN2ZmMmE2YmMxNjA5YmNjZDE0YzA4N2ZhMmJlNTljNGY3MjBmZWZhMTA5OGY4OTY3ZTVjMjFi"
   },
   "frame": {
     "version": "1",
@@ -10,7 +10,7 @@
     "iconUrl": "https://github.com/jpfraneto/images/blob/main/brndsplash.png?raw=true",
     "homeUrl": "https://brnd.lat",
     "imageUrl": "https://github.com/jpfraneto/images/blob/main/image.png?raw=true",
-    "buttonTitle": "Vote your Brand",
+    "buttonTitle": "BRND",
     "splashImageUrl": "https://github.com/jpfraneto/images/blob/main/brndsplash.png?raw=true",
     "splashBackgroundColor": "#000000",
     "webhookUrl": "https://api.brnd.lat/webhook"

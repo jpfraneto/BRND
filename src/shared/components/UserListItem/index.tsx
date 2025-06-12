@@ -30,12 +30,15 @@ function UserListItem({ user, position }: UserListItemProps): React.ReactNode {
         {position}
       </Typography>
       <div className={styles.row}>
-        <img
-          className={styles.img}
-          src={user.photoUrl}
-          width={32}
-          height={32}
-        />
+        <div className={styles.avatarContainer}>
+          <img
+            className={styles.img}
+            src={user.photoUrl}
+            width={32}
+            height={32}
+            alt={`${user.username} profile picture`}
+          />
+        </div>
         <Typography size={14} lineHeight={18}>
           {user.username}
         </Typography>

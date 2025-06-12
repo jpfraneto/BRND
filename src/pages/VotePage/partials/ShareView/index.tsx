@@ -20,6 +20,7 @@ import styles from "./ShareView.module.scss";
 // Assets
 import Logo from "@/assets/images/logo.svg";
 import ShareIcon from "@/assets/icons/share-icon.svg?react";
+import sdk from "@farcaster/frame-sdk";
 
 interface ShareViewProps extends VotingViewProps {}
 
@@ -43,7 +44,7 @@ export default function ShareView({
    * Handles the click event for the "Share now" button.
    * Opens a new window with the specified URL.
    */
-  const handleClickShare = useCallback(() => {
+  const handleClickShare = useCallback(async () => {
     const profile1 = currentBrands[1].profile
       ? currentBrands[1].profile
       : currentBrands[1].channel;
@@ -54,10 +55,11 @@ export default function ShareView({
       ? currentBrands[2].profile
       : currentBrands[2].channel;
 
-    window.open(
-      `https://warpcast.com/~/compose?text=I%27ve%20just%20create%20my%20%2Fbrnd%20podium:%0A%0A%F0%9F%A5%87${currentBrands[1].name} - ${profile1}%0A%F0%9F%A5%88${currentBrands[0].name} - ${profile2}%0A%F0%9F%A5%89${currentBrands[2].name} - ${profile3}%0A&embeds[]=${FRAME_URL}/${currentVoteId}`,
-      "_blank"
-    );
+    const newCast = await sdk.actions.composeCast({
+      text: `I just created my /brnd podium of today:\n\n🥇${currentBrands[1].name} - ${profile1}\n🥈${currentBrands[0].name} - ${profile2}\n🥉${currentBrands[2].name} - ${profile3}`,
+      embeds: [`https://brnd.lat/podium/${currentVoteId}`],
+    });
+    console.log("the new cast is", newCast);
 
     shareFrame.mutate(undefined, {
       onSuccess: (result) => {
@@ -117,7 +119,7 @@ export default function ShareView({
           size={16}
           lineHeight={20}
         >
-          I’ve just create my podium of Brands with;
+          I've just created my BRND podium of today:
         </Typography>
         <div className={styles.places}>
           {places.map((place, index) => (
@@ -146,9 +148,9 @@ export default function ShareView({
               weight={"semiBold"}
               textAlign={"center"}
               size={14}
-              lineHeight={18}
+              lineHeight={10}
             >
-              You will earn 3 BRND points sharing your podium once a day
+              You will earn 3 BRND points for sharing
             </Typography>
             <Button
               caption={"Share now"}
