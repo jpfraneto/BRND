@@ -1,0 +1,39 @@
+// /src/shared/components/TimePeriodFilter/TimePeriodFilter.module.scss
+
+@import "@/styles/index.scss";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: flex-start; // Align to the left
+  align-items: center;
+  width: 100%;
+  padding: 0; // Remove container padding
+}
+
+.filterButton {
+  padding: 8px 16px;
+  border: 1px solid #404040; // Gray border
+  border-radius: 20px; // More rounded like in your image
+  background: transparent;
+  color: #8a8a8a; // Gray text
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  text-align: center;
+
+  &:hover {
+    color: #fff;
+    border-color: #606060;
+  }
+
+  &.active {
+    color: #fff;
+    background-color: transparent;
+    border-color: #fff; // White border when active
+    font-weight: 500;
+  }
+}

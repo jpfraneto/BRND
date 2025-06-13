@@ -1,5 +1,5 @@
 // Dependencies
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 // StyleSheet
@@ -15,8 +15,13 @@ import TabNavigator from "@/components/TabNavigator";
 // Hocs
 import withProtectionRoute from "@/hocs/withProtectionRoute";
 import BrandHeader from "@/shared/components/BrandHeader";
+import TimePeriodFilter, {
+  BrandTimePeriod,
+} from "@/shared/components/TimePeriodFilter";
 
 function HomePage(): React.ReactNode {
+  const [selectedPeriod, setSelectedPeriod] = useState<BrandTimePeriod>("all");
+
   return (
     <AppLayout>
       <div className={styles.body}>
@@ -42,10 +47,18 @@ function HomePage(): React.ReactNode {
             />
           </div>
         </div>
+
+        <div className={styles.periodFilter}>
+          <TimePeriodFilter
+            selectedPeriod={selectedPeriod}
+            onPeriodChange={setSelectedPeriod}
+          />
+        </div>
+
         <Routes>
-          <Route path="/" element={<TrendBrands />} />
-          <Route path="/new" element={<NewBrands />} />
-          <Route path="/all" element={<AllBrands />} />
+          <Route path="/" element={<TrendBrands period={selectedPeriod} />} />
+          <Route path="/new" element={<NewBrands period={selectedPeriod} />} />
+          <Route path="/all" element={<AllBrands period={selectedPeriod} />} />
         </Routes>
       </div>
     </AppLayout>

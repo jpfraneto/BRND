@@ -11,6 +11,9 @@ export type Brand = {
   stateScoreWeek: number;
   scoreWeek: number;
   rankingWeek: number;
+  stateScoreMonth: number;
+  scoreMonth: number;
+  rankingMonth: number;
   createdAt: string;
   updatedAt: string;
   description: string;
@@ -18,18 +21,18 @@ export type Brand = {
   warpcastUrl: string;
   category: Category;
   banned: number;
-}
+};
 
 export type Category = {
   id: number;
   name: string;
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
-export type ListBrandTypes = 'all' | 'new' | 'top';
+export type ListBrandTypes = "all" | "new" | "top";
 
-export type BrandStateScoreType = 'up' | 'equal' | 'down';
+export type BrandStateScoreType = "up" | "equal" | "down";
 
 export type BrandCast = {
   creator: string;
@@ -39,4 +42,3 @@ export type BrandCast = {
   image?: string;
   warpcastUrl: string;
 };
-

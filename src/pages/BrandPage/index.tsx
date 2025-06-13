@@ -29,26 +29,25 @@ import withProtectionRoute from "@/hocs/withProtectionRoute";
 // Hooks
 import { useBrand } from "@/hooks/brands";
 import { useAuth } from "@/hooks/auth";
-import { ModalsIds, useModal } from "@/hooks/ui";
 import useDisableScrollBody from "@/hooks/ui/useDisableScrollBody";
 
 // Utils
 import { shortenNumber } from "@/utils/number";
 import { getBrandScoreVariation } from "@/utils/brand";
+import sdk from "@farcaster/frame-sdk";
 
 function BrandPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
   const { data: user } = useAuth();
   const { data, isLoading, isFetching } = useBrand(Number(id));
-  const { openModal } = useModal();
   useDisableScrollBody();
 
   /**
    * Opens the brand's website in a new tab.
    */
   const handleClickWebsite = useCallback(() => {
-    window.open(data?.brand?.url);
+    window.open(data?.brand?.url, "_blank");
   }, [data?.brand?.url]);
 
   /**
@@ -56,8 +55,9 @@ function BrandPage() {
    */
   const handleClickShare = useCallback(() => {
     if (data?.brand?.id) {
-      openModal(ModalsIds.SHARE_BRAND, {
-        id: data.brand?.id,
+      sdk.actions.composeCast({
+        text: `Check out this brand on BRND: ${data?.brand?.name} - ${data?.brand?.profile}`,
+        embeds: [`https://brnd.lat/brand/${data?.brand?.id}`],
       });
     }
   }, [data?.brand?.id]);
@@ -138,7 +138,6 @@ function BrandPage() {
    * @type {boolean} - True if the user has voted today, false otherwise.
    */
   const isFooterVisible = user && !user.hasVotedToday;
-
   return (
     <AppLayout>
       <div className={styles.body}>
@@ -190,8 +189,12 @@ function BrandPage() {
             <div className={styles.container}>
               <div className={classNames(styles.grid, styles.inline)}>
                 <div className={styles.grid}>
-                  <div className={styles.image}>
-                    <img src={data.brand.imageUrl} alt={data.brand.name} />
+                  <div className={styles.imageContainer}>
+                    <img
+                      src={data.brand.imageUrl}
+                      alt={data.brand.name}
+                      className={styles.brandImage}
+                    />
                   </div>
                   {renderVariation()}
                   <GridItem title={"Farcaster"}>

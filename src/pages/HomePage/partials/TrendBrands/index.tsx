@@ -20,15 +20,50 @@ import { getBrandScoreVariation } from "@/utils/brand";
 
 // Assets
 import FeatureFarcasterBrand from "@/assets/images/feature-farcaster-brand.svg?react";
+import { BrandTimePeriod } from "@/shared/components/TimePeriodFilter";
 
-function TrendBrands() {
+interface TrendBrandsProps {
+  period: BrandTimePeriod;
+}
+
+function TrendBrands({ period }: TrendBrandsProps) {
   const navigate = useNavigate();
-  const { data, refetch } = useBrandList("top", "", 1, 10);
+  const { data, refetch } = useBrandList("top", "", 1, 10, period);
   useDisableScrollBody();
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [period]);
+
+  const getScoreForPeriod = useCallback(
+    (brand: Brand): number => {
+      switch (period) {
+        case "week":
+          return brand.scoreWeek;
+        case "month":
+          return brand.scoreMonth || brand.scoreWeek;
+        case "all":
+        default:
+          return brand.score;
+      }
+    },
+    [period]
+  );
+
+  const getStateScoreForPeriod = useCallback(
+    (brand: Brand): number => {
+      switch (period) {
+        case "week":
+          return brand.stateScoreWeek;
+        case "month":
+          return brand.stateScoreMonth || brand.stateScoreWeek;
+        case "all":
+        default:
+          return brand.stateScore;
+      }
+    },
+    [period]
+  );
 
   /**
    * Memoized computation to get the main brand from the list of brands.
@@ -68,9 +103,11 @@ function TrendBrands() {
                 className={styles.brandCard}
                 name={mainBrand.name}
                 photoUrl={mainBrand.imageUrl}
-                score={mainBrand.scoreWeek}
+                score={getScoreForPeriod(mainBrand)}
                 onClick={() => handleClickCard(mainBrand.id)}
-                variation={getBrandScoreVariation(mainBrand.stateScoreWeek)}
+                variation={getBrandScoreVariation(
+                  getStateScoreForPeriod(mainBrand)
+                )}
               />
             </div>
           </div>
@@ -85,8 +122,10 @@ function TrendBrands() {
                 position={index + 1}
                 name={brand.name}
                 photoUrl={brand.imageUrl}
-                score={brand.scoreWeek}
-                variation={getBrandScoreVariation(brand.stateScoreWeek)}
+                score={getScoreForPeriod(brand)}
+                variation={getBrandScoreVariation(
+                  getStateScoreForPeriod(brand)
+                )}
                 onClick={() => handleClickCard(brand.id)}
               />
             </li>

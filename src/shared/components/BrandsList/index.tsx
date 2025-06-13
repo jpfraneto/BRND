@@ -24,12 +24,14 @@ import useBottomSheet from "@/hooks/ui/useBottomSheet";
 // Utils
 import { getBrandScoreVariation } from "@/utils/brand";
 import sdk from "@farcaster/frame-sdk";
+import { BrandTimePeriod } from "@/services/brands";
 
 interface BrandsListProps {
   readonly value?: Brand["id"][];
   readonly config?: {
     order: "new" | "top" | "all";
     limit: number;
+    period?: BrandTimePeriod;
   };
   readonly className?: string;
   readonly isFinderEnabled?: boolean;
@@ -44,6 +46,7 @@ export default function BrandsList({
   config = {
     order: "all",
     limit: 27,
+    period: "all",
   },
   isFinderEnabled = true,
   isSelectable = false,
@@ -59,7 +62,8 @@ export default function BrandsList({
     config.order,
     searchQuery,
     pageId,
-    config.limit
+    config.limit,
+    config.period || "all"
   );
 
   /**
@@ -74,6 +78,36 @@ export default function BrandsList({
       if (data.brands.length < data.count) {
         setPageId(pageId + 1);
       }
+    }
+  };
+
+  /**
+   * Gets the score for a brand based on the selected time period.
+   * Returns the appropriate score value depending on whether week, month or all-time is selected.
+   * @param {Brand} brand - The brand object to get the score for
+   * @returns {number} The score value for the selected time period
+   */
+  const getScoreForPeriod = (brand: Brand): number => {
+    switch (config.period) {
+      case "week":
+        return brand.scoreWeek;
+      case "month":
+        return brand.scoreMonth || brand.scoreWeek; // Fallback to week if month not available
+      case "all":
+      default:
+        return brand.score;
+    }
+  };
+
+  const getStateScoreForPeriod = (brand: Brand): number => {
+    switch (config.period) {
+      case "week":
+        return brand.stateScoreWeek;
+      case "month":
+        return brand.stateScoreMonth || brand.stateScoreWeek; // Fallback to week if month not available
+      case "all":
+      default:
+        return brand.stateScore;
     }
   };
 
@@ -141,8 +175,10 @@ export default function BrandsList({
                     ? "center"
                     : "right"
                 }
-                score={brand.score}
-                variation={getBrandScoreVariation(brand.stateScore)}
+                score={getScoreForPeriod(brand)} // NEW: Dynamic score
+                variation={getBrandScoreVariation(
+                  getStateScoreForPeriod(brand)
+                )} // NEW: Dynamic variation
                 disabled={!!value.find((e) => e === brand.id)}
                 {...(isSelectable
                   ? {

@@ -10,6 +10,10 @@
   overflow: hidden;
   height: 100vh;
   padding-bottom: 60px;
+
+  &:not(:has(.footer)) {
+    padding-bottom: 0;
+  }
 }
 
 .header {
@@ -37,6 +41,10 @@
   overflow: auto;
   padding-bottom: 24px;
   padding-top: 12px;
+
+  &:not(:has(+ .footer)) {
+    padding-bottom: 0;
+  }
 }
 
 .backBtn {
@@ -61,22 +69,24 @@
   align-items: center;
 }
 
-.image {
+.imageContainer {
   width: 100%;
   height: 100%;
   border-radius: 12px;
   aspect-ratio: 1/1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  object-fit: contain;
+  background-color: #f0f0f0;
+}
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    aspect-ratio: 1/1;
-    vertical-align: bottom;
-    border-radius: 12px;
-  }
+.brandImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
 }
 
 .center,

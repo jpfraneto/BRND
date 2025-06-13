@@ -33,6 +33,8 @@ export interface PublicPodium {
   pointsAwarded: number;
 }
 
+export type BrandTimePeriod = "week" | "month" | "all";
+
 /**
  * Response structure for recent podiums API
  */
@@ -94,13 +96,15 @@ export type BrandResponse = {
  * @param {string} pageId - The ID of the page to retrieve.
  * @param {string} [limit='27'] - The number of brands to retrieve per page. Defaults to '27'.
  * @param {'top' | 'new' | 'all'} order - The order in which to retrieve the brands.
+ * @param {BrandTimePeriod} [period='all'] - The time period for filtering. Defaults to 'all'.
  * @returns {Promise<GetBrandListResponse>} A promise that resolves with the list of brands and the count.
  */
 export const getBrandList = async (
   searchQuery: string,
   pageId: string,
   limit: string = "27",
-  order: "top" | "new" | "all" = "all"
+  order: "top" | "new" | "all" = "all",
+  period: BrandTimePeriod = "all" // NEW: Added period parameter
 ): Promise<GetBrandListResponse> =>
   await request<GetBrandListResponse>(`${BRAND_SERVICE}/list`, {
     method: "GET",
@@ -109,6 +113,7 @@ export const getBrandList = async (
       pageId,
       limit,
       order,
+      period,
     },
   });
 

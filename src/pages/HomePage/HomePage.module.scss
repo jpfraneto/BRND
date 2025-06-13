@@ -5,7 +5,7 @@
   flex-direction: column;
   flex: 1;
   @include baseLayout();
-  gap: 32px;
+  gap: 12px;
   height: 100vh;
   overflow: hidden;
   padding: 0 12px;
@@ -22,4 +22,13 @@
 .tabs {
   width: 100%;
   padding-top: 20px;
+}
+
+.periodFilter {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 6px; // 8px above
+  padding-bottom: 8px; // 12px below
+  padding-left: 0;
 }
