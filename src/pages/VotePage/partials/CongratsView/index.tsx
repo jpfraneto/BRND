@@ -95,7 +95,7 @@ export default function CongratsView() {
           textAlign={"center"}
           className={styles.title}
         >
-          Congrats! you have won 100 BRND points
+          Congrats! you have won 3 BRND points
         </Typography>
 
         {/* Conditional notification prompt */}
@@ -103,7 +103,7 @@ export default function CongratsView() {
           <NotificationPrompt
             userFid={user.fid}
             onComplete={handleNotificationComplete}
-            points={100}
+            points={3}
           />
         )}
 

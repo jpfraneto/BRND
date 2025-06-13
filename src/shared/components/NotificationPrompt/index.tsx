@@ -9,7 +9,7 @@ import styles from "./NotificationPrompt.module.scss";
 
 const NotificationPrompt: React.FC<NotificationPromptProps> = ({
   onComplete,
-  points = 100,
+  points = 3,
   userFid,
 }) => {
   const { state, actions } = useNotificationPrompt(userFid, onComplete);
