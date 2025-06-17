@@ -16,9 +16,17 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  padding-top: 40px;
 }
 
 .tabs {
   width: 100%;
   padding-top: 20px;
+}
+
+.description {
+  width: 100%;
+  max-width: 600px;
+  text-align: left;
+  margin-top: 16px;
 }

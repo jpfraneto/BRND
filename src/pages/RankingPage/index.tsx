@@ -14,26 +14,34 @@ import TabNavigator from "@/components/TabNavigator";
 
 // Hocs
 import withProtectionRoute from "@/hocs/withProtectionRoute";
-import PointsHeader from "@/shared/components/PointsHeader";
+import Typography from "@/shared/components/Typography";
+import BrandHeader from "@/shared/components/BrandHeader";
 
 function RankingPage(): React.ReactNode {
   return (
     <AppLayout>
       <div className={styles.body}>
         <div className={styles.header}>
-          <PointsHeader />
+          <BrandHeader />
+          <div className={styles.description}>
+            <Typography
+              variant="geist"
+              weight="regular"
+              size={15}
+              textAlign="left"
+              lineHeight={20}
+            >
+              Overall ranking of brand scores.
+            </Typography>
+          </div>
 
           <div className={styles.tabs}>
             <TabNavigator
               tabs={[
                 {
-                  label: "Rank",
+                  label: "Global Ranking",
                   path: "/ranking",
                 },
-                // {
-                //   label: "Podiums",
-                //   path: "/ranking/podiums",
-                // },
               ]}
             />
           </div>

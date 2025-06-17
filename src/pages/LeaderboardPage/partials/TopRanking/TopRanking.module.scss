@@ -12,7 +12,7 @@
 
 .grid {
   display: grid;
-  gap: 8px;
+  gap: 16px;
   grid-template-columns: repeat(1, minmax(0%, 100%));
   list-style-type: none;
   overflow: auto;

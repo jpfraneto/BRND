@@ -1,0 +1,256 @@
+@import "@/styles/index.scss";
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: 16px;
+}
+
+.userRankSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.userRankCard {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+  height: 128px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userRankContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.userRankInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userRankAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.userRankPosition {
+  color: white;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+// Share section styling
+.shareSection {
+  display: flex;
+  justify-content: center;
+  width: 222px;
+  margin: 0 auto;
+}
+
+.shareButton {
+  min-width: 120px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+}
+
+.scrollContainer {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 12px; // Match your existing padding
+
+  // Match your existing scroll styling
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+
+  // Custom scrollbar styling (from your existing styles)
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.usersList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; // Match your existing gap
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  padding-bottom: 32px; // Extra padding for scroll loading
+}
+
+.userItem {
+  display: flex; // Match your existing li style
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Loading states (updated to match your existing styles)
+.loadingMore {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 8px;
+  flex-direction: column;
+}
+
+.loadingText {
+  color: #667eea; // Match your existing loading text color
+  font-weight: 500;
+}
+
+// End of list indicator (updated to match your existing styles)
+.endOfList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  text-align: center;
+  gap: 4px;
+}
+
+.endText {
+  color: #667eea; // Match your existing .endText
+  font-weight: 600;
+}
+
+.totalText {
+  color: #888; // Match your existing .totalText
+  opacity: 0.8;
+}
+
+// Error and empty states (match your existing styles exactly)
+.error,
+.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+  padding: 32px;
+}
+
+.retryButton {
+  background: #ff6b6b; // Match your existing retry button
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+
+  &:hover {
+    background: #ff5252;
+  }
+}
+
+.emptyIcon {
+  font-size: 48px; // Match your existing empty icon
+  margin-bottom: 8px;
+}
+
+.emptySubtext {
+  color: #666; // Match your existing empty subtext
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+// Responsive design (match your existing breakpoints)
+@media (max-width: 768px) {
+  .layout {
+    gap: 12px; // Smaller gap on mobile
+  }
+
+  .userRankSection {
+    padding: 0 8px;
+  }
+
+  .userRankCard {
+    padding: 16px;
+  }
+
+  .userRankAvatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .userRankPosition {
+    font-size: 48px;
+  }
+
+  .scrollContainer {
+    padding: 0 8px;
+  }
+
+  .usersList {
+    gap: 6px; // Match your existing mobile gap
+    padding-bottom: 16px;
+  }
+
+  .loadingMore {
+    padding: 16px;
+  }
+
+  .endOfList {
+    padding: 20px 16px;
+  }
+
+  .error,
+  .empty {
+    padding: 24px 16px;
+    height: 250px;
+  }
+}
+
+@media (max-height: 600px) {
+  .layout {
+    gap: 12px;
+  }
+
+  .userRankCard {
+    padding: 16px;
+  }
+
+  .usersList {
+    gap: 6px;
+    padding-bottom: 16px;
+  }
+}
