@@ -16,10 +16,11 @@ import useDisableScrollBody from "@/hooks/ui/useDisableScrollBody";
 
 // Hocs
 import withProtectionRoute from "@/hocs/withProtectionRoute";
+import LoaderIndicator from "@/shared/components/LoaderIndicator";
 
 function LeaderboardPage(): React.ReactNode {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading, error, refetch } = useUserLeaderboard(
+  const { data, isLoading, isFetching, error, refetch } = useUserLeaderboard(
     currentPage,
     50
   );
@@ -31,11 +32,17 @@ function LeaderboardPage(): React.ReactNode {
   }, [currentPage, refetch]);
 
   /**
-   * Handle loading more users (pagination)
+   * Handles the scroll event for the leaderboard list.
+   * If the user scrolls to the bottom of the list, it fetches the next page of users.
+   * @param {React.UIEvent<HTMLDivElement>} e - The scroll event.
    */
-  const handleLoadMore = () => {
-    if (data?.pagination.hasNextPage) {
-      setCurrentPage((prev) => prev + 1);
+  const handleScrollList = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    const calc = scrollTop + clientHeight + 50;
+    if (calc >= scrollHeight && !isFetching) {
+      if (data?.pagination?.hasNextPage) {
+        setCurrentPage((prev) => prev + 1);
+      }
     }
   };
 
@@ -58,7 +65,7 @@ function LeaderboardPage(): React.ReactNode {
             </div>
           </div>
           <div className={styles.loading}>
-            <Typography>Loading leaderboard...</Typography>
+            <LoaderIndicator variant="default" size={24} />
           </div>
         </div>
       </AppLayout>
@@ -152,43 +159,39 @@ function LeaderboardPage(): React.ReactNode {
           </div>
         </div>
 
-        <div className={styles.content}>
+        {/* Scrollable content container */}
+        <div className={styles.content} onScroll={handleScrollList}>
           {data?.users && data.users.length > 0 && (
-            <>
-              <ul className={styles.grid}>
-                {data.users.map((user, index) => {
-                  // Calculate actual position based on pagination
-                  const position = (currentPage - 1) * 50 + index + 1;
-                  return (
-                    <li key={`--user-item-${user.id}`}>
-                      <UserListItem user={user} position={position} />
-                    </li>
-                  );
-                })}
-              </ul>
+            <ul className={styles.grid}>
+              {data.users.map((user, index) => {
+                // Calculate actual position based on pagination
+                const position = (currentPage - 1) * 50 + index + 1;
+                return (
+                  <li key={`--user-item-${user.fid}`}>
+                    <UserListItem user={user} position={position} />
+                  </li>
+                );
+              })}
+            </ul>
+          )}
 
-              {/* Load more button */}
-              {data.pagination.hasNextPage && (
-                <div className={styles.loadMore}>
-                  <button
-                    onClick={handleLoadMore}
-                    disabled={isLoading}
-                    className={styles.loadMoreButton}
-                  >
-                    {isLoading ? "Loading..." : "Load More"}
-                  </button>
-                </div>
-              )}
+          {/* Loading indicator for infinite scroll */}
+          {isFetching && currentPage > 1 && (
+            <div className={styles.loadingMore}>
+              <LoaderIndicator variant="default" size={24} />
+            </div>
+          )}
 
-              {/* Pagination info */}
-              <div className={styles.paginationInfo}>
-                <Typography size={12} className={styles.paginationText}>
-                  Showing {(currentPage - 1) * 50 + 1}-
-                  {Math.min(currentPage * 50, data.pagination.total)} of{" "}
-                  {data.pagination.total} users
-                </Typography>
-              </div>
-            </>
+          {/* End indicator */}
+          {data && !data.pagination.hasNextPage && data.users.length > 0 && (
+            <div className={styles.endIndicator}>
+              <Typography size={12} className={styles.endText}>
+                You've reached the end! 🎉
+              </Typography>
+              <Typography size={12} className={styles.totalText}>
+                Total: {data.pagination.total} users
+              </Typography>
+            </div>
           )}
         </div>
       </div>

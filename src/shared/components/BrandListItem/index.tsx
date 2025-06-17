@@ -6,7 +6,7 @@ interface BrandListItem {
   photoUrl: string;
   score: number;
   position: number;
-  variation: "up" | "down" | "equal";
+  variation: "up" | "down" | "equal" | "hide";
   onClick: () => void;
 }
 
@@ -35,10 +35,14 @@ export const BrandListItem: React.FC<BrandListItem> = ({
    */
   const renderVariation = (
     variation: BrandListItem["variation"]
-  ): JSX.Element => {
+  ): JSX.Element | null => {
     const iconClass = styles[variation];
     const IconComponent =
       variation === "equal" ? ScoreEqualIcon : ScoreUpDownIcon;
+
+    if (variation === "hide") {
+      return null;
+    }
 
     return (
       <div className={iconClass}>

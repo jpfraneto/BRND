@@ -13,6 +13,6 @@
     "buttonTitle": "BRND",
     "splashImageUrl": "https://github.com/jpfraneto/images/blob/main/brndsplash.png?raw=true",
     "splashBackgroundColor": "#000000",
-    "webhookUrl": "https://poiesis.anky.bot/notification-service/webhook"
+    "webhookUrl": "https://poiesis.anky.app/notification-service/webhook"
   }
 }

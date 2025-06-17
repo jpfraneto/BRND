@@ -1,19 +1,19 @@
 // Dependencies
-import {useRef} from 'react';
-import {useQuery} from '@tanstack/react-query';
+import { useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 // Services
-import {getUserVotesHistory} from '@/services/user';
+import { getUserVotesHistory } from "@/services/user";
 
 // Types
-import {User, UserVoteHistory} from './types';
+import { User, UserVoteHistory } from "./types";
 
-export const useVoteHistory = (userId: User['id'], pageId: number) => {
+export const useVoteHistory = (userId: User["fid"], pageId: number) => {
   const votesRef = useRef<Record<string, UserVoteHistory>>({});
   const countRef = useRef<number>(0);
 
   const result = useQuery({
-    queryKey: ['votesHistory', userId, pageId],
+    queryKey: ["votesHistory", userId, pageId],
     queryFn: () => getUserVotesHistory(userId, pageId),
     retry: false,
     staleTime: 0,

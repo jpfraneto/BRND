@@ -1,18 +1,20 @@
-// src/components/NotificationPrompt/index.tsx
-
 import React from "react";
 import Button from "@/shared/components/Button";
 import Typography from "@/shared/components/Typography";
 import { NotificationPromptProps } from "@/shared/components/NotificationPrompt/types";
 import { useNotificationPrompt } from "@/shared/hooks/notifications/useNotificationPrompt";
 import styles from "./NotificationPrompt.module.scss";
+import sdk from "@farcaster/frame-sdk";
 
 const NotificationPrompt: React.FC<NotificationPromptProps> = ({
   onComplete,
-  points = 3,
+  points = 0,
   userFid,
 }) => {
   const { state, actions } = useNotificationPrompt(userFid, onComplete);
+
+  // Determine if this is being shown on app load vs after voting
+  const isAppLoadContext = points === 0;
 
   if (state.isAdded) {
     return (
@@ -28,7 +30,9 @@ const NotificationPrompt: React.FC<NotificationPromptProps> = ({
             You're all set!
           </Typography>
           <Typography size={14} className={styles.successText}>
-            We'll remind you to vote daily so you never miss earning points
+            {isAppLoadContext
+              ? "Welcome to BRND! We'll keep you updated with the latest."
+              : "We'll remind you to vote daily so you never miss earning points"}
           </Typography>
         </div>
       </div>
@@ -46,12 +50,15 @@ const NotificationPrompt: React.FC<NotificationPromptProps> = ({
           size={18}
           className={styles.title}
         >
-          Never miss earning points!
+          {isAppLoadContext
+            ? "Get the best BRND experience!"
+            : "Never miss earning points!"}
         </Typography>
 
         <Typography size={14} className={styles.description}>
-          You just earned {points} points! Get daily reminders to vote and keep
-          climbing the leaderboard.
+          {isAppLoadContext
+            ? "Add BRND to your apps to get daily vote reminders and stay competitive on the leaderboard."
+            : `You just earned ${points} points! Get daily reminders to vote and keep climbing the leaderboard.`}
         </Typography>
 
         <div className={styles.benefits}>
@@ -61,11 +68,11 @@ const NotificationPrompt: React.FC<NotificationPromptProps> = ({
           </div>
           <div className={styles.benefit}>
             <span className={styles.benefitIcon}>🏆</span>
-            <Typography size={12}>Stay competitive</Typography>
+            <Typography size={12}>Monthly brand champions</Typography>
           </div>
           <div className={styles.benefit}>
             <span className={styles.benefitIcon}>💎</span>
-            <Typography size={12}>Never miss points</Typography>
+            <Typography size={12}>Never miss earning points</Typography>
           </div>
         </div>
 
@@ -79,8 +86,11 @@ const NotificationPrompt: React.FC<NotificationPromptProps> = ({
       <div className={styles.actions}>
         <Button
           variant="secondary"
-          caption="Maybe later"
-          onClick={actions.skip}
+          caption="Later"
+          onClick={() => {
+            sdk.haptics.selectionChanged();
+            actions.skip();
+          }}
           className={styles.skipButton}
         />
         <Button

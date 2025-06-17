@@ -30,6 +30,7 @@ function MyPodium() {
     isLoading,
     error,
   } = useMyVoteHistory(pageId, 15);
+  console.log("THE HISTORY IS", history);
 
   // Simplified useEffect - no need to check for user.id
   useEffect(() => {

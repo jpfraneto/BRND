@@ -37,6 +37,7 @@
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+  height: 100%;
 }
 
 .usersList {
@@ -102,8 +103,32 @@
   gap: 8px;
   grid-template-columns: repeat(1, minmax(0%, 100%));
   list-style-type: none;
-  overflow: auto;
-  padding-bottom: 12px;
+  overflow-y: auto; // Make the grid itself scrollable
+  overflow-x: hidden;
+  flex: 1; // Take all available space
+  scroll-behavior: smooth; // Smooth scrolling
+  height: 100%;
+
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  // Smooth scrolling on touch devices
+  -webkit-overflow-scrolling: touch;
 }
 
 .userPosition {
@@ -151,42 +176,42 @@
   }
 }
 
-.loadMore {
+// NEW: Infinite scroll loading indicator
+.loadingMore {
   display: flex;
   justify-content: center;
-  padding: 24px;
+  align-items: center;
+  padding: 20px;
+
+  .loadingText {
+    color: #667eea;
+    font-weight: 500;
+  }
 }
 
-.loadMoreButton {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 20px;
-  cursor: pointer;
+// NEW: End of list indicator
+.endIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  text-align: center;
+  gap: 4px;
+}
+
+.endText {
+  color: #667eea;
   font-weight: 600;
-  transition: all 0.3s ease;
-
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
 }
 
-.paginationInfo {
-  display: flex;
-  justify-content: center;
-  padding: 16px;
+.totalText {
+  color: #888;
+  opacity: 0.8;
 }
 
-.paginationText {
-  color: #666;
-}
+// REMOVED: Load more button styles (no longer needed)
+// .loadMore, .loadMoreButton, .paginationInfo, .paginationText
 
 // Responsive design
 @media (max-width: 768px) {
@@ -197,12 +222,31 @@
     height: 250px;
   }
 
-  .loadMore {
+  .grid {
+    gap: 6px;
+    padding-bottom: 16px;
+  }
+
+  .loadingMore {
     padding: 16px;
   }
 
-  .loadMoreButton {
-    padding: 10px 20px;
-    font-size: 14px;
+  .endIndicator {
+    padding: 20px 16px;
+  }
+}
+
+@media (max-height: 600px) {
+  .header {
+    padding-top: 20px;
+  }
+
+  .titleSection {
+    padding-top: 12px;
+  }
+
+  .grid {
+    gap: 6px;
+    padding-bottom: 16px;
   }
 }

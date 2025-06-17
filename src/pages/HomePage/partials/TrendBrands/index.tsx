@@ -19,7 +19,10 @@ import useDisableScrollBody from "@/hooks/ui/useDisableScrollBody";
 import { getBrandScoreVariation } from "@/utils/brand";
 
 // Assets
-import FeatureFarcasterBrand from "@/assets/images/feature-farcaster-brand.svg?react";
+import BrandOfTheWeek from "@/assets/images/brand-of-the-week.svg?react";
+import BrandOfTheMonth from "@/assets/images/brand-of-the-month.svg?react";
+import AllTimeBrand from "@/assets/images/all-time-brand.svg?react";
+
 import { BrandTimePeriod } from "@/shared/components/TimePeriodFilter";
 
 interface TrendBrandsProps {
@@ -65,6 +68,19 @@ function TrendBrands({ period }: TrendBrandsProps) {
     [period]
   );
 
+  const getBannerSvg = useCallback((period: BrandTimePeriod) => {
+    switch (period) {
+      case "week":
+        return <BrandOfTheWeek />;
+      case "month":
+        return <BrandOfTheMonth />;
+      case "all":
+        return <AllTimeBrand />;
+      default:
+        return null;
+    }
+  }, []);
+
   /**
    * Memoized computation to get the main brand from the list of brands.
    *
@@ -92,9 +108,7 @@ function TrendBrands({ period }: TrendBrandsProps) {
       {mainBrand && (
         <div className={styles.inner}>
           <div className={styles.feature}>
-            <div className={styles.image}>
-              <FeatureFarcasterBrand />
-            </div>
+            <div className={styles.image}>{getBannerSvg(period)}</div>
             <div className={styles.brand}>
               <BrandCard
                 size={"l"}

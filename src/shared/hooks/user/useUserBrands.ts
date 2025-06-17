@@ -1,15 +1,12 @@
 // Dependencies
-import {useQuery} from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
+import { getUserBrands } from "@/services/user";
 
-// Services
-import {getUserBrands} from '@/services/user';
-
-// Types
-import {User} from './types';
-
-export const useUserBrands = (userId: User['id']) => {
+export const useUserBrands = () => {
   return useQuery({
-    queryKey: ['userBrands', userId],
-    queryFn: () => getUserBrands(),
+    queryKey: ["userBrands"], // Remove userId since we get it from auth
+    queryFn: getUserBrands,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
   });
 };

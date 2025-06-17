@@ -81,7 +81,7 @@ export async function request<T>(
 
     console.log("Request successful, parsing response...");
     const data: T = await response.json();
-    console.log("Response data:", data);
+    console.log("Response data in here:", data);
     return data;
   } catch (error) {
     console.error("Request error:", error);

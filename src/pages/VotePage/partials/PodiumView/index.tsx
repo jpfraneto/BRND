@@ -15,7 +15,7 @@ import Button from "@/components/Button";
 import IconButton from "@/components/IconButton";
 
 // Types
-import { VotingViewEnum, VotingViewProps } from "../../types";
+import { VotingViewProps } from "../../types";
 
 // StyleSheet
 import styles from "./PodiumView.module.scss";
@@ -30,7 +30,7 @@ import sdk from "@farcaster/frame-sdk";
 
 interface PodiumViewProps extends VotingViewProps {}
 
-export default function PodiumView({ navigateToView }: PodiumViewProps) {
+export default function PodiumView({}: PodiumViewProps) {
   const voteBrands = useVoteBrands();
   const navigate = useNavigate();
   const { openModal } = useModal();
@@ -99,7 +99,7 @@ export default function PodiumView({ navigateToView }: PodiumViewProps) {
    */
   const handleSubmitVote = useCallback(
     (brands: Brand[]) => {
-      console.log("Submitting vote for brands:", brands);
+      console.log("🗳️ [PodiumView] Submitting vote for brands:", brands);
 
       // Validate brands before submission
       if (!validateBrands(brands)) {
@@ -112,21 +112,37 @@ export default function PodiumView({ navigateToView }: PodiumViewProps) {
       // Submit vote with correct order: 1st, 2nd, 3rd place
       voteBrands.mutate(
         {
-          ids: [brands[0].id, brands[1].id, brands[2].id], // Correct order
+          ids: [brands[1].id, brands[0].id, brands[2].id], // Correct order for backend
         },
         {
           onSuccess: (response) => {
-            // Invalidate auth cache to update hasVotedToday status
-            queryClient.invalidateQueries({ queryKey: ["auth"] });
+            console.log(
+              "✅ [PodiumView] Vote submitted successfully:",
+              response
+            );
 
-            // Navigate to share view
-            navigateToView(VotingViewEnum.SHARE, brands, response.id);
+            // Invalidate auth cache to update hasVotedToday status and get todaysVote
+            queryClient.invalidateQueries({ queryKey: ["auth"] });
 
             // Show success feedback
             sdk.haptics.selectionChanged();
+
+            // OPTION 1: Use internal navigation (stay on same page)
+            // This works if the parent VotePage can handle the view switch
+            // navigateToView(VotingViewEnum.SHARE, brands, response.id);
+
+            // OPTION 2: Navigate to dedicated URL (RECOMMENDED)
+            // This ensures URL reflects the vote and refreshes auth data
+            const todayUnix = Math.floor(Date.now() / 1000);
+            navigate(`/vote/${todayUnix}?success`);
+
+            console.log(
+              "🗳️ [PodiumView] Navigating to:",
+              `/vote/${todayUnix}?success`
+            );
           },
           onError: (error) => {
-            console.error("Voting error:", error);
+            console.error("❌ [PodiumView] Voting error:", error);
 
             // Show error feedback
             sdk.haptics.selectionChanged();
@@ -144,7 +160,7 @@ export default function PodiumView({ navigateToView }: PodiumViewProps) {
         }
       );
     },
-    [voteBrands, navigateToView, validateBrands, queryClient, openModal]
+    [voteBrands, navigate, validateBrands, queryClient, openModal]
   );
 
   /**

@@ -3,8 +3,9 @@
 .layout {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 402px);
+  height: calc(100vh - 240px);
   overflow: hidden;
+  gap: 28px;
 }
 
 .grid {
@@ -16,3 +17,60 @@
   padding-bottom: 12px;
 }
 
+// Loading, error, and empty states
+.loading,
+.error,
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  min-height: 200px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.retryButton,
+.voteButton {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.empty {
+  h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.3rem;
+    color: white;
+  }
+  p {
+    margin: 0 0 1rem 0;
+  }
+}
+
+.center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  color: white;
+  margin-top: 16px;
+  min-height: 48px;
+}

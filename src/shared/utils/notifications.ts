@@ -18,6 +18,7 @@ export const getNotificationSettings = (
         isEnabled: false,
       };
     }
+
     return JSON.parse(stored);
   } catch (error) {
     console.error("Error reading notification settings:", error);

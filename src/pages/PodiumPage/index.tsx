@@ -7,18 +7,18 @@ import styles from "./PodiumPage.module.scss";
 // Components
 import AppLayout from "../../shared/layouts/AppLayout";
 import TabNavigator from "@/components/TabNavigator";
-import PointsHeader from "@/shared/components/PointsHeader";
 import PublicPodiumsFeed from "./partials/PublicPodiumsFeed";
 
 // Hocs
 import withProtectionRoute from "@/hocs/withProtectionRoute";
+import BrandHeader from "@/shared/components/BrandHeader";
 
 function PodiumPage(): React.ReactNode {
   return (
     <AppLayout>
       <div className={styles.body}>
         <div className={styles.header}>
-          <PointsHeader />
+          <BrandHeader />
 
           <div className={styles.tabs}>
             <TabNavigator

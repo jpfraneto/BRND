@@ -3,9 +3,10 @@
 .body {
   display: flex;
   flex-direction: column;
+  flex: 1;
   @include baseLayout();
   gap: 32px;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
   padding: 0 12px;
 }
@@ -15,6 +16,7 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  padding-top: 40px;
 }
 
 .tabs {

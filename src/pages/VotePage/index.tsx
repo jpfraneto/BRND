@@ -1,6 +1,10 @@
-// Dependencies
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Navigate, useLocation, useParams } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useParams,
+  useNavigate,
+} from "react-router-dom";
 
 // Components
 import PodiumView from "./partials/PodiumView";
@@ -22,9 +26,19 @@ import LoaderIndicator from "../../shared/components/LoaderIndicator";
 function VotePage(): React.ReactNode {
   const { unixDate } = useParams<{ unixDate?: string }>();
   const { search } = useLocation();
+  const navigate = useNavigate();
 
-  const { data: votes, isFetching } = useUserVotes(Number(unixDate));
-  const { data: user } = useAuth();
+  const { data: user, isLoading: authLoading } = useAuth();
+
+  // Use fallback only if we have unixDate but no todaysVote in user data
+  const shouldUseFallback = unixDate && user && !user.todaysVote;
+  const { data: fallbackVotes, isFetching: fallbackLoading } = useUserVotes(
+    shouldUseFallback ? Number(unixDate) : undefined
+  );
+
+  // FIXED: todaysVote should be a single object, not an array
+  const votes = user?.todaysVote || fallbackVotes || null;
+  const isLoading = authLoading || (shouldUseFallback && fallbackLoading);
 
   const [view, setView] = useState<[VotingViewEnum, Brand[], string]>([
     VotingViewEnum.PODIUM,
@@ -32,10 +46,13 @@ function VotePage(): React.ReactNode {
     "",
   ]);
 
+  console.log("🗳️ [VotePage] User data:", user);
+  console.log("🗳️ [VotePage] Today's vote (single object):", user?.todaysVote);
+  console.log("🗳️ [VotePage] UnixDate param:", unixDate);
+  console.log("🗳️ [VotePage] Final votes used:", votes);
+
   /**
    * Determines if the voting process was successful based on the URL search parameters.
-   *
-   * @returns {boolean} True if the 'success' parameter is present in the URL search parameters, otherwise false.
    */
   const isSuccess = useMemo<boolean>(
     () => new URLSearchParams(search).get("success") === "",
@@ -44,10 +61,6 @@ function VotePage(): React.ReactNode {
 
   /**
    * Navigates to a different view based on the provided id and selection.
-   *
-   * @param {VotingViewEnum} id - The id of the view to navigate to.
-   * @param {Brand[]} selection - The selection of brands for the view.
-   * @param {string} id - The id of the vote to share the podium.
    */
   const navigateToView = useCallback(
     (id: VotingViewEnum, selection: Brand[], voteId: string) =>
@@ -57,10 +70,6 @@ function VotePage(): React.ReactNode {
 
   /**
    * Object containing the properties to be passed to the child components.
-   *
-   * @property {Function} navigateToView - Function to navigate to a different view.
-   * @property {VotingViewEnum} currentView - The current view being displayed.
-   * @property {Brand[]} currentBrands - The current selection of brands.
    */
   const mapToProps = {
     navigateToView,
@@ -71,40 +80,66 @@ function VotePage(): React.ReactNode {
 
   /**
    * Renders the appropriate view based on the current state.
-   *
-   * @returns {React.ReactNode} The component to be rendered.
    */
   const renderView = (): React.ReactNode => {
     switch (view[0]) {
       case VotingViewEnum.PODIUM:
         return <PodiumView {...mapToProps} />;
-
       case VotingViewEnum.SHARE:
         return <ShareView {...mapToProps} />;
-
       case VotingViewEnum.CONGRATS:
         return <CongratsView />;
     }
   };
 
+  // Auto-redirect: If user has voted today but no unixDate, redirect to today's vote
   useEffect(() => {
-    if (unixDate && !isFetching && votes?.id) {
-      navigateToView(
-        isSuccess ? VotingViewEnum.CONGRATS : VotingViewEnum.SHARE,
-        [votes.brand2, votes.brand1, votes.brand3],
-        votes?.id
+    if (
+      !isLoading &&
+      user?.hasVotedToday &&
+      !unixDate &&
+      user?.todaysVote?.id // FIXED: Access directly, not as array
+    ) {
+      const todayUnix = Math.floor(Date.now() / 1000);
+      console.log(
+        "🗳️ [VotePage] User has voted, redirecting to today's vote:",
+        todayUnix
       );
+      navigate(`/vote/${todayUnix}`, { replace: true });
+      return;
     }
-  }, [isFetching, votes, unixDate, isSuccess, navigateToView]);
+  }, [isLoading, user, unixDate, navigate]);
 
-  if (
-    (user && user.hasVotedToday && !unixDate) ||
-    (unixDate && !isFetching && !votes?.id)
-  ) {
+  // Set up the view when we have vote data
+  useEffect(() => {
+    if (!isLoading && votes?.id) {
+      console.log("🗳️ [VotePage] Setting up view with votes:", votes);
+
+      // Check if we have all required brand data
+      if (votes.brand1 && votes.brand2 && votes.brand3) {
+        navigateToView(
+          isSuccess ? VotingViewEnum.CONGRATS : VotingViewEnum.SHARE,
+          [votes.brand2, votes.brand1, votes.brand3], // Order: 2nd, 1st, 3rd for UI
+          votes.id
+        );
+      } else {
+        console.warn(
+          "🗳️ [VotePage] Vote data missing brand information:",
+          votes
+        );
+      }
+    }
+  }, [isLoading, votes, isSuccess, navigateToView]);
+
+  // Simplified redirect logic - only redirect if we can't find the requested vote
+  if (!isLoading && unixDate && !votes?.id) {
+    console.log(
+      "🗳️ [VotePage] Unix date provided but no vote found, redirecting to home"
+    );
     return <Navigate to={"/"} />;
   }
 
-  return isFetching ? (
+  return isLoading ? (
     <LoaderIndicator size={30} variant={"fullscreen"} />
   ) : (
     renderView()

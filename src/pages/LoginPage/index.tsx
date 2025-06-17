@@ -126,7 +126,8 @@ function LoginPage() {
             <div className={styles.errorMessage}>
               <Typography weight="light" textAlign="center">
                 There was a problem communicating with the server. Please
-                contact the dev to fix it.
+                contact the dev to fix it (or just refresh the miniapp and see
+                if that works!)
               </Typography>
             </div>
           </motion.div>

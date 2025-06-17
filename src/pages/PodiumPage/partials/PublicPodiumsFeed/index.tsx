@@ -66,7 +66,7 @@ function PublicPodiumsFeed() {
   if (isLoading && currentPage === 1) {
     return (
       <div className={styles.layout}>
-        <LoaderIndicator />
+        <LoaderIndicator size={30} variant={"fullscreen"} />
       </div>
     );
   }

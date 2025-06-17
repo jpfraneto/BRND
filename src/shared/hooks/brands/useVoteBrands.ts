@@ -2,42 +2,34 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Services
-import {
-  VoteBrandsParams,
-  VoteBrandsResponse,
-  voteBrands,
-} from "@/services/brands";
+import { voteBrands } from "@/services/brands";
 
 export const useVoteBrands = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ ids }: VoteBrandsParams) => {
-      console.log("Voting with body:", { ids });
-
-      // Additional validation on the frontend
-      if (!Array.isArray(ids) || ids.length !== 3) {
-        throw new Error("Must select exactly 3 brands");
-      }
-
-      // Check for duplicates
-      const uniqueIds = new Set(ids);
-      if (uniqueIds.size !== 3) {
-        throw new Error("All brands must be different");
-      }
-
-      return voteBrands({ ids });
+    mutationFn: (data: { ids: number[] }) => {
+      // Your API call here
+      return voteBrands(data);
     },
-    onSuccess: async (response: VoteBrandsResponse) => {
-      console.log("Vote successful:", response);
+    onSuccess: () => {
+      console.log("✅ [useVoteBrands] Vote successful, invalidating queries");
 
-      // Invalidate relevant queries to refresh data
-      await queryClient.invalidateQueries({ queryKey: ["auth"] });
-      await queryClient.invalidateQueries({ queryKey: ["brands"] });
-      await queryClient.invalidateQueries({ queryKey: ["user-votes"] });
+      // Invalidate auth to get fresh user data with todaysVote
+      queryClient.invalidateQueries({ queryKey: ["auth"] });
+
+      // Invalidate other related queries
+      queryClient.invalidateQueries({ queryKey: ["brands"] });
+      queryClient.invalidateQueries({ queryKey: ["leaderboard"] });
+      queryClient.invalidateQueries({ queryKey: ["userBrands"] });
+
+      // Optional: Add a small delay to ensure backend has processed the vote
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["auth"] });
+      }, 500);
     },
     onError: (error) => {
-      console.error("Voting failed:", error);
+      console.error("❌ [useVoteBrands] Vote failed:", error);
     },
   });
 };
