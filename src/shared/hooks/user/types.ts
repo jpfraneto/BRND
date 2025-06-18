@@ -10,6 +10,7 @@ export type User = {
   todaysVote?: UserVote | null;
   isNewUser: boolean;
   notificationsEnabled?: boolean;
+  hasSharedToday?: boolean;
 };
 
 export enum UserRoleEnum {

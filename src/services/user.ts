@@ -2,7 +2,7 @@
 import { request } from "./api";
 
 // Configuration
-import { USER_SERVICE } from "@/config/api";
+import { BRAND_SERVICE, USER_SERVICE } from "@/config/api";
 
 // Types
 import {
@@ -11,6 +11,18 @@ import {
   UserVote,
   UserBrand,
 } from "../shared/hooks/user";
+
+export interface ShareVerificationData {
+  castHash: string;
+  voteId: string;
+}
+
+export interface ShareVerificationResponse {
+  verified: boolean;
+  pointsAwarded: number;
+  newTotalPoints: number;
+  message: string;
+}
 
 /**
  * Retrieves the vote history of a user from the user service.
@@ -113,4 +125,21 @@ export const getUserBrands = async () =>
 export const shareFrame = async (): Promise<boolean> =>
   await request(`${USER_SERVICE}/share-frame`, {
     method: "POST",
+  });
+
+/**
+ * Verifies a shared cast and awards points for valid shares.
+ *
+ * @param data - Object containing castHash and voteId
+ * @returns A promise that resolves with verification result and updated points
+ */
+export const verifyShare = async (
+  data: ShareVerificationData
+): Promise<ShareVerificationResponse> =>
+  await request<ShareVerificationResponse>(`${BRAND_SERVICE}/verify-share`, {
+    method: "POST",
+    body: data,
+    headers: {
+      "Content-Type": "application/json",
+    },
   });

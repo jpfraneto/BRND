@@ -303,6 +303,7 @@ function BrandPage() {
                       }}
                       url={cast.warpcastUrl}
                       message={cast.text}
+                      hash={cast.hash}
                       attach={{
                         type: "image",
                         src: cast?.image as string,

@@ -21,7 +21,7 @@
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  background-image: linear-gradient(90deg, #FF9533 0%, #FFE835 100%);
+  background-image: linear-gradient(90deg, #ff9533 0%, #ffe835 100%);
 }
 
 .logo {
@@ -47,4 +47,22 @@
   gap: 56px;
   flex: 1;
   padding: 0 6px;
+}
+
+.verifyingSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0;
+}
+
+.actionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.actionGroup .Button {
+  width: 100%;
 }

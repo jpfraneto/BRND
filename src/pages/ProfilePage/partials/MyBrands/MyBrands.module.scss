@@ -53,14 +53,11 @@
 }
 
 .empty {
-  h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.3rem;
-    color: white;
-  }
-  p {
-    margin: 0 0 1rem 0;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 .center {
@@ -69,8 +66,5 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 100%;
-  color: white;
-  margin-top: 16px;
-  min-height: 48px;
+  max-width: 200px;
 }

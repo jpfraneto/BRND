@@ -1,39 +1,42 @@
-import { useCallback, useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
-export const FRAME_URL = import.meta.env.VITE_APP_FRAME_URL;
+import { useCallback, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import sdk from "@farcaster/frame-sdk";
 
 // Components
 import Podium from "@/components/Podium";
 import Typography from "@/components/Typography";
 import Button from "@/components/Button";
+import LoaderIndicator from "@/shared/components/LoaderIndicator";
 
-import { useShareFrame } from "@/hooks/user";
+// Hooks
+import { useShareVerification } from "@/hooks/user/useShareVerification";
 
 // Types
-import { VotingViewProps } from "../../types";
+import { VotingViewProps, VotingViewEnum } from "../../types";
+
+// Assets
+import ShareIcon from "@/assets/icons/share-icon.svg?react";
+
+// StyleSheet
+import styles from "./ShareView.module.scss";
 
 interface Place {
   icon: string;
   name: string;
 }
 
-// StyleSheet
-import styles from "./ShareView.module.scss";
-
-// Assets
-import ShareIcon from "@/assets/icons/share-icon.svg?react";
-import sdk from "@farcaster/frame-sdk";
-
 interface ShareViewProps extends VotingViewProps {}
 
 export default function ShareView({
   currentBrands,
   currentVoteId,
+  navigateToView,
 }: ShareViewProps) {
   const navigate = useNavigate();
-  const location = useLocation();
-  const shareFrame = useShareFrame();
+  const shareVerification = useShareVerification();
+
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareError, setShareError] = useState<string | null>(null);
 
   console.log("📤 [ShareView] Current brands:", currentBrands);
   console.log("📤 [ShareView] Current vote ID:", currentVoteId);
@@ -50,9 +53,14 @@ export default function ShareView({
   }, [currentVoteId, navigate]);
 
   /**
-   * Handles the click event for the "Share now" button.
+   * Handles the unified sharing logic with verification.
    */
   const handleClickShare = useCallback(async () => {
+    if (isSharing) return; // Prevent double-clicks
+
+    setIsSharing(true);
+    setShareError(null);
+
     try {
       // Safely extract profile/channel info
       const getProfileOrChannel = (brand: any) => {
@@ -63,7 +71,8 @@ export default function ShareView({
       const profile2 = getProfileOrChannel(currentBrands[0]);
       const profile3 = getProfileOrChannel(currentBrands[2]);
 
-      const newCast = await sdk.actions.composeCast({
+      // Compose cast with standardized text and embed
+      const castResponse = await sdk.actions.composeCast({
         text: `I just created my /brnd podium of today:\n\n🥇${
           currentBrands[1]?.name || "Brand 1"
         } - ${profile1}\n🥈${
@@ -74,28 +83,61 @@ export default function ShareView({
         embeds: [`https://poiesis.anky.app/embeds/podium/${currentVoteId}`],
       });
 
-      console.log("📤 [ShareView] Cast created:", newCast);
+      console.log("📤 [ShareView] Cast created:", castResponse);
 
-      shareFrame.mutate(undefined, {
-        onSuccess: (result) => {
-          if (result) {
-            if (location.pathname === "/vote") {
-              navigate(
-                `${location.pathname}/${Math.floor(Date.now() / 1000)}?success`
+      // If cast was successful and we have a hash, verify it
+      if (castResponse && castResponse.cast?.hash) {
+        console.log(
+          "🔍 [ShareView] Verifying cast hash:",
+          castResponse.cast.hash
+        );
+
+        // Immediately navigate to congrats view
+        navigateToView?.(VotingViewEnum.CONGRATS, currentBrands, currentVoteId);
+
+        // Verify the share in the background
+        shareVerification.mutate(
+          {
+            castHash: castResponse.cast?.hash,
+            voteId: currentVoteId,
+          },
+          {
+            onError: (error) => {
+              console.error("❌ [ShareView] Verification failed:", error);
+              // Navigate back to share view with error
+              setShareError(
+                error.message || "Failed to verify share. Please try again."
               );
-            } else {
-              navigate(location.pathname + "?success");
-            }
+              setIsSharing(false);
+              // Go back to share view
+              navigateToView?.(
+                VotingViewEnum.SHARE,
+                currentBrands,
+                currentVoteId
+              );
+            },
           }
-        },
-        onError: (error) => {
-          console.error("📤 [ShareView] Share frame error:", error);
-        },
-      });
+        );
+      } else {
+        console.warn(
+          "📤 [ShareView] Cast response missing hash:",
+          castResponse
+        );
+        setShareError("Share was not completed. Please try again.");
+        setIsSharing(false);
+      }
     } catch (error) {
       console.error("📤 [ShareView] Share error:", error);
+      setShareError("Failed to share cast. Please try again.");
+      setIsSharing(false);
     }
-  }, [shareFrame, currentBrands, currentVoteId, navigate, location]);
+  }, [
+    currentBrands,
+    currentVoteId,
+    navigateToView,
+    shareVerification,
+    isSharing,
+  ]);
 
   // Safely create places array
   const places = useMemo<Place[]>(() => {
@@ -152,6 +194,22 @@ export default function ShareView({
           Share on farcaster
         </Typography>
       </div>
+
+      {/* Show error message if share verification failed */}
+      {shareError && (
+        <div className={styles.errorMessage}>
+          <Typography
+            variant={"geist"}
+            weight={"medium"}
+            size={14}
+            lineHeight={18}
+            textAlign={"center"}
+          >
+            {shareError}
+          </Typography>
+        </div>
+      )}
+
       <div className={styles.box}>
         <Typography
           variant={"geist"}
@@ -193,10 +251,13 @@ export default function ShareView({
               You will earn 3 BRND points for sharing
             </Typography>
             <Button
-              caption={"Share now"}
+              caption={isSharing ? "Sharing..." : "Share now"}
               className={styles.button}
-              iconLeft={<ShareIcon />}
+              iconLeft={
+                isSharing ? <LoaderIndicator size={16} /> : <ShareIcon />
+              }
               onClick={handleClickShare}
+              disabled={isSharing}
             />
           </div>
         </div>
@@ -206,6 +267,7 @@ export default function ShareView({
           variant={"underline"}
           caption="Skip"
           onClick={handleClickSkip}
+          disabled={isSharing}
         />
       </div>
     </div>

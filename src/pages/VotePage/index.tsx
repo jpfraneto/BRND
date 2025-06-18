@@ -36,7 +36,6 @@ function VotePage(): React.ReactNode {
     shouldUseFallback ? Number(unixDate) : undefined
   );
 
-  // FIXED: todaysVote should be a single object, not an array
   const votes = user?.todaysVote || fallbackVotes || null;
   const isLoading = authLoading || (shouldUseFallback && fallbackLoading);
 
@@ -47,7 +46,8 @@ function VotePage(): React.ReactNode {
   ]);
 
   console.log("🗳️ [VotePage] User data:", user);
-  console.log("🗳️ [VotePage] Today's vote (single object):", user?.todaysVote);
+  console.log("🗳️ [VotePage] Today's vote:", user?.todaysVote);
+  console.log("🗳️ [VotePage] Has shared today:", user?.hasSharedToday);
   console.log("🗳️ [VotePage] UnixDate param:", unixDate);
   console.log("🗳️ [VotePage] Final votes used:", votes);
 
@@ -98,7 +98,7 @@ function VotePage(): React.ReactNode {
       !isLoading &&
       user?.hasVotedToday &&
       !unixDate &&
-      user?.todaysVote?.id // FIXED: Access directly, not as array
+      user?.todaysVote?.id
     ) {
       const todayUnix = Math.floor(Date.now() / 1000);
       console.log(
@@ -117,11 +117,24 @@ function VotePage(): React.ReactNode {
 
       // Check if we have all required brand data
       if (votes.brand1 && votes.brand2 && votes.brand3) {
-        navigateToView(
-          isSuccess ? VotingViewEnum.CONGRATS : VotingViewEnum.SHARE,
-          [votes.brand2, votes.brand1, votes.brand3], // Order: 2nd, 1st, 3rd for UI
-          votes.id
-        );
+        const brandOrder = [votes.brand2, votes.brand1, votes.brand3]; // UI order: 2nd, 1st, 3rd
+
+        if (isSuccess) {
+          // User just voted successfully - always show ShareView first
+          console.log("🗳️ [VotePage] Just voted - showing ShareView");
+          navigateToView(VotingViewEnum.SHARE, brandOrder, votes.id);
+        } else {
+          // User is viewing a previous vote - check sharing status
+          if (user?.hasSharedToday) {
+            // User has already shared today's vote - show CongratsView
+            console.log("🗳️ [VotePage] Already shared - showing CongratsView");
+            navigateToView(VotingViewEnum.CONGRATS, brandOrder, votes.id);
+          } else {
+            // User has voted but not shared - show ShareView
+            console.log("🗳️ [VotePage] Not shared yet - showing ShareView");
+            navigateToView(VotingViewEnum.SHARE, brandOrder, votes.id);
+          }
+        }
       } else {
         console.warn(
           "🗳️ [VotePage] Vote data missing brand information:",
@@ -129,7 +142,7 @@ function VotePage(): React.ReactNode {
         );
       }
     }
-  }, [isLoading, votes, isSuccess, navigateToView]);
+  }, [isLoading, votes, isSuccess, user?.hasSharedToday, navigateToView]);
 
   // Simplified redirect logic - only redirect if we can't find the requested vote
   if (!isLoading && unixDate && !votes?.id) {

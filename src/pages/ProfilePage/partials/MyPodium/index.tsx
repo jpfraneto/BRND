@@ -17,6 +17,7 @@ import Typography from "@/components/Typography";
 // Utils
 import { getBrandScoreVariation } from "@/shared/utils/brand";
 import LoaderIndicator from "@/shared/components/LoaderIndicator";
+import Button from "@/shared/components/Button";
 
 function MyPodium() {
   const navigate = useNavigate();
@@ -71,10 +72,15 @@ function MyPodium() {
     return (
       <div className={styles.layout}>
         <div className={styles.error}>
-          <Typography>Failed to load your podiums</Typography>
-          <button onClick={() => refetch()} className={styles.retryButton}>
-            Try Again
-          </button>
+          <Typography size={14} weight="medium">
+            Failed to load your podiums
+          </Typography>
+
+          <Button
+            caption="Try Again"
+            variant="primary"
+            onClick={() => refetch()}
+          />
         </div>
       </div>
     );
@@ -83,21 +89,21 @@ function MyPodium() {
   // Empty state - no podiums yet
   if (history && Object.keys(history.data).length === 0) {
     return (
-      <div className={styles.layout}>
+      <div className={styles.emptyLayout}>
         <div className={styles.empty}>
-          <div className={styles.emptyIcon}>🏆</div>
-          <Typography size={18} weight="medium" className={styles.emptyTitle}>
-            No podiums yet!
+          <Typography size={16} weight={"regular"} lineHeight={20}>
+            Nothing here yet
           </Typography>
-          <Typography size={14} className={styles.emptySubtext}>
-            Start voting to create your first podium and earn points!
+          <Typography size={16} weight={"regular"} lineHeight={20}>
+            Start voting to see your personal brand rankings!
           </Typography>
-          <button
-            onClick={() => navigate("/voting")}
-            className={styles.startVotingButton}
-          >
-            Start Voting
-          </button>
+          <div className={styles.center}>
+            <Button
+              caption="Vote Now"
+              variant="primary"
+              onClick={() => navigate("/vote")}
+            />
+          </div>
         </div>
       </div>
     );

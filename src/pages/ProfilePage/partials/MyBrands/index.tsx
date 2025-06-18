@@ -56,7 +56,7 @@ function MyBrands() {
       <div className={styles.layout}>
         <div className={styles.empty}>
           <Typography size={16} weight={"regular"} lineHeight={20}>
-            No brand rankings yet
+            Nothing here yet
           </Typography>
           <Typography size={16} weight={"regular"} lineHeight={20}>
             Start voting to see your personal brand rankings!

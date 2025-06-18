@@ -41,4 +41,5 @@ export type BrandCast = {
   text: string;
   image?: string;
   warpcastUrl: string;
+  hash: string;
 };

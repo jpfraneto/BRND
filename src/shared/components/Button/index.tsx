@@ -13,6 +13,7 @@ interface ButtonProps {
   iconRight?: React.ReactNode;
   className?: string;
   onClick: () => void;
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -22,10 +23,12 @@ const Button: React.FC<ButtonProps> = ({
   iconRight,
   className = "",
   onClick,
+  disabled = false,
 }) => (
   <button
     className={classNames(styles.layout, styles[variant], className)}
     onClick={onClick}
+    disabled={disabled}
   >
     <div className={styles.container}>
       {variant === "primary" && <span className={styles.effect} />}
