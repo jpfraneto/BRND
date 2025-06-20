@@ -1,0 +1,115 @@
+@import "@/styles/index.scss";
+
+.body {
+  display: flex;
+  flex-direction: column;
+  @include baseLayout();
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-top: 16px;
+  gap: 14px;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  flex: 0;
+}
+
+.title {
+  background: none;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(90deg, #ff9533 0%, #ffe835 100%);
+}
+
+.successMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: 12px;
+  margin: 0 8px;
+}
+
+.checkIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(76, 175, 80, 0.2);
+  border-radius: 50%;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: #4caf50;
+  }
+}
+
+.pointsText {
+  color: #4caf50;
+}
+
+.box {
+  display: flex;
+  flex: 0;
+  padding: 12px;
+  border: 1px solid #2f2f2f;
+  border-radius: 16px;
+  flex-direction: column;
+  gap: 8px;
+  color: #f7fcf8;
+}
+
+.places {
+  display: flex;
+  flex-direction: column;
+}
+
+.podium {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.actionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.actionGroup .Button {
+  width: 100%;
+}
+
+@include isMobile() {
+  .body {
+    padding-top: 12px;
+    gap: 12px;
+  }
+
+  .successMessage {
+    padding: 12px;
+    margin: 0 4px;
+  }
+
+  .box {
+    padding: 10px;
+  }
+
+  .actionGroup {
+    margin-bottom: 16px;
+  }
+}

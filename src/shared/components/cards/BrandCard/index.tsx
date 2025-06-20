@@ -11,10 +11,6 @@ import Typography from "../../Typography";
 // Hooks
 import { BrandStateScoreType } from "@/hooks/brands";
 
-// Assets
-import ScoreUpDownIcon from "@/assets/icons/score-updown-icon.svg?react";
-import ScoreEqualIcon from "@/assets/icons/score-equal-icon.svg?react";
-
 // Utils
 import { shortenNumber } from "@/utils/number";
 
@@ -37,7 +33,6 @@ export default function BrandCard({
   score,
   size = "m",
   orientation = "left",
-  variation = "equal",
   selected,
   onClick,
   className = "",
@@ -48,19 +43,6 @@ export default function BrandCard({
    * @param {BrandCardProps['variation']} variation - The variation type ('equal', 'up', 'down').
    * @returns {JSX.Element} The rendered variation icon.
    */
-  const renderVariation = (
-    variation: BrandCardProps["variation"]
-  ): JSX.Element => {
-    const iconClass = styles[variation];
-    const IconComponent =
-      variation === "equal" ? ScoreEqualIcon : ScoreUpDownIcon;
-
-    return (
-      <div className={iconClass}>
-        <IconComponent />
-      </div>
-    );
-  };
 
   const sizes = {
     s: {
@@ -171,7 +153,6 @@ export default function BrandCard({
             >
               {shortenNumber(score)}
             </Typography>
-            {renderVariation(variation)}
           </div>
         </div>
         <Typography

@@ -22,6 +22,7 @@ import { useUserVotes } from "@/hooks/user/useUserVotes";
 // Hocs
 import withProtectionRoute from "@/hocs/withProtectionRoute";
 import LoaderIndicator from "../../shared/components/LoaderIndicator";
+import AlreadySharedView from "./partials/AlreadySharedView";
 
 function VotePage(): React.ReactNode {
   const { unixDate } = useParams<{ unixDate?: string }>();
@@ -143,6 +144,10 @@ function VotePage(): React.ReactNode {
       }
     }
   }, [isLoading, votes, isSuccess, user?.hasSharedToday, navigateToView]);
+
+  if (user?.hasSharedToday) {
+    return <AlreadySharedView {...mapToProps} />;
+  }
 
   // Simplified redirect logic - only redirect if we can't find the requested vote
   if (!isLoading && unixDate && !votes?.id) {

@@ -7,8 +7,7 @@
   @include baseLayout();
   gap: 8px;
   padding: 0 12px;
-  overflow: hidden;
-  height: 100vh;
+  min-height: 100vh;
   padding-bottom: 60px;
 
   &:not(:has(.footer)) {
@@ -21,6 +20,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .head {
@@ -38,9 +38,15 @@
 
 .container {
   width: 100%;
-  overflow: auto;
+  // FIXED: Make container properly scrollable and flexible
+  flex: 1;
+  overflow-y: auto; // Changed from just 'auto'
+  overflow-x: hidden; // Prevent horizontal scroll
   padding-bottom: 24px;
   padding-top: 12px;
+
+  // FIXED: Add proper scrolling behavior
+  -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
 
   &:not(:has(+ .footer)) {
     padding-bottom: 0;
@@ -153,9 +159,13 @@
   }
 
   &.casts {
+    // FIXED: Make casts section properly scrollable
     > div {
       display: flex;
+      flex-direction: column; // Changed from flex (row) to column
       gap: 12px;
+      // FIXED: Allow casts to expand properly
+      width: 100%;
     }
   }
 }
@@ -203,7 +213,6 @@
 
   &.up {
     color: #00ff00;
-
     background: #00ff0026;
     border: 1px solid #ffffff1a;
     color: #00ff00;

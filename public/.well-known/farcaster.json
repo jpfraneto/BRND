@@ -7,11 +7,11 @@
   "frame": {
     "version": "1",
     "name": "BRND",
-    "iconUrl": "https://github.com/jpfraneto/images/blob/main/brndsplash.png?raw=true",
+    "iconUrl": "https://github.com/jpfraneto/images/blob/main/LOGO%20BRND%20SQUARE.png?raw=true",
     "homeUrl": "https://brnd.lat",
     "imageUrl": "https://github.com/jpfraneto/images/blob/main/image.png?raw=true",
     "buttonTitle": "BRND",
-    "splashImageUrl": "https://github.com/jpfraneto/images/blob/main/brndsplash.png?raw=true",
+    "splashImageUrl": "https://github.com/jpfraneto/images/blob/main/LOGO%20BRND%20SQUARE.png?raw=true",
     "splashBackgroundColor": "#000000",
     "webhookUrl": "https://poiesis.anky.app/notification-service/webhook"
   }

@@ -16,16 +16,11 @@ import styles from "./BrandListItem.module.scss";
 // Components
 import Typography from "../Typography";
 
-// Assets
-import ScoreUpDownIcon from "@/assets/icons/score-updown-icon.svg?react";
-import ScoreEqualIcon from "@/assets/icons/score-equal-icon.svg?react";
-
 export const BrandListItem: React.FC<BrandListItem> = ({
   name,
   photoUrl,
   position,
   score,
-  variation,
   onClick,
 }) => {
   /**
@@ -33,23 +28,6 @@ export const BrandListItem: React.FC<BrandListItem> = ({
    * @param {BrandCardProps['variation']} variation - The variation type ('equal', 'up', 'down').
    * @returns {JSX.Element} The rendered variation icon.
    */
-  const renderVariation = (
-    variation: BrandListItem["variation"]
-  ): JSX.Element | null => {
-    const iconClass = styles[variation];
-    const IconComponent =
-      variation === "equal" ? ScoreEqualIcon : ScoreUpDownIcon;
-
-    if (variation === "hide") {
-      return null;
-    }
-
-    return (
-      <div className={iconClass}>
-        <IconComponent />
-      </div>
-    );
-  };
 
   return (
     <button onClick={onClick} className={styles.layout}>
@@ -66,7 +44,6 @@ export const BrandListItem: React.FC<BrandListItem> = ({
         <Typography size={14} lineHeight={14}>
           {score}
         </Typography>
-        {renderVariation(variation)}
       </div>
     </button>
   );

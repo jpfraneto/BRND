@@ -1,5 +1,3 @@
-// src/shared/layouts/AppLayout/AppLayout.module.scss
-
 @import "@/styles/index.scss";
 
 .layout {
@@ -14,8 +12,13 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  // FIXED: Allow scrolling in content area
+  overflow-y: auto;
+  overflow-x: hidden;
   padding-bottom: 90px;
+
+  // Add smooth scrolling for better UX
+  -webkit-overflow-scrolling: touch;
 }
 
 .bar {

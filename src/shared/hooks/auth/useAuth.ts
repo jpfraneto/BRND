@@ -25,6 +25,13 @@ import { useContext } from "react";
 export const useAuth = () => {
   const { token, miniappContext, isInitialized } = useContext(AuthContext);
 
+  // Add debug logging to track when hook is called and context state
+  console.log("useAuth hook called with:", {
+    hasToken: !!token,
+    hasMiniappContext: !!miniappContext,
+    isInitialized,
+  });
+
   return useQuery({
     queryKey: ["auth"],
     queryFn: getMe,

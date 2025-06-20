@@ -36,6 +36,7 @@ export default function ShareView({
   const shareVerification = useShareVerification();
 
   const [isSharing, setIsSharing] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [shareError, setShareError] = useState<string | null>(null);
 
   console.log("📤 [ShareView] Current brands:", currentBrands);
@@ -56,7 +57,12 @@ export default function ShareView({
    * Handles the unified sharing logic with verification.
    */
   const handleClickShare = useCallback(async () => {
-    if (isSharing) return; // Prevent double-clicks
+    console.log(
+      "🔍 [ShareView] Starting share process with vote ID:",
+      currentVoteId
+    );
+
+    if (isSharing || isVerifying) return; // Prevent double-clicks
 
     setIsSharing(true);
     setShareError(null);
@@ -71,16 +77,21 @@ export default function ShareView({
       const profile2 = getProfileOrChannel(currentBrands[0]);
       const profile3 = getProfileOrChannel(currentBrands[2]);
 
+      const castText = `I just created my /brnd podium of today:\n\n🥇${
+        currentBrands[1]?.name || "Brand 1"
+      } - ${profile1}\n🥈${
+        currentBrands[0]?.name || "Brand 2"
+      } - ${profile2}\n🥉${currentBrands[2]?.name || "Brand 3"} - ${profile3}`;
+
+      // Use the correct embed URL that matches backend expectation
+      const embedUrl = `https://brnd.lat?voteId=${currentVoteId}`;
+
+      console.log("📤 [ShareView] Sharing with embed URL:", embedUrl);
+
       // Compose cast with standardized text and embed
       const castResponse = await sdk.actions.composeCast({
-        text: `I just created my /brnd podium of today:\n\n🥇${
-          currentBrands[1]?.name || "Brand 1"
-        } - ${profile1}\n🥈${
-          currentBrands[0]?.name || "Brand 2"
-        } - ${profile2}\n🥉${
-          currentBrands[2]?.name || "Brand 3"
-        } - ${profile3}`,
-        embeds: [`https://poiesis.anky.app/embeds/podium/${currentVoteId}`],
+        text: castText,
+        embeds: [embedUrl],
       });
 
       console.log("📤 [ShareView] Cast created:", castResponse);
@@ -92,29 +103,35 @@ export default function ShareView({
           castResponse.cast.hash
         );
 
-        // Immediately navigate to congrats view
-        navigateToView?.(VotingViewEnum.CONGRATS, currentBrands, currentVoteId);
+        // Update state to show verification is happening
+        setIsSharing(false);
+        setIsVerifying(true);
 
-        // Verify the share in the background
+        // Verify the share and wait for result
         shareVerification.mutate(
           {
             castHash: castResponse.cast?.hash,
             voteId: currentVoteId,
           },
           {
-            onError: (error) => {
-              console.error("❌ [ShareView] Verification failed:", error);
-              // Navigate back to share view with error
-              setShareError(
-                error.message || "Failed to verify share. Please try again."
-              );
-              setIsSharing(false);
-              // Go back to share view
+            onSuccess: (data) => {
+              console.log("✅ [ShareView] Share verified successfully:", data);
+              setIsVerifying(false);
+
+              // Navigate to congrats view only after successful verification
               navigateToView?.(
-                VotingViewEnum.SHARE,
+                VotingViewEnum.CONGRATS,
                 currentBrands,
                 currentVoteId
               );
+            },
+            onError: (error) => {
+              console.error("❌ [ShareView] Verification failed:", error);
+              setIsVerifying(false);
+              setShareError(
+                error.message || "Failed to verify share. Please try again."
+              );
+              // Stay on share view to show error and allow retry
             },
           }
         );
@@ -137,6 +154,7 @@ export default function ShareView({
     navigateToView,
     shareVerification,
     isSharing,
+    isVerifying,
   ]);
 
   // Safely create places array
@@ -181,6 +199,15 @@ export default function ShareView({
     );
   }
 
+  // Determine the current state for UI feedback
+  const getButtonState = () => {
+    if (isSharing) return "Sharing...";
+    if (isVerifying) return "Verifying...";
+    return "Share now";
+  };
+
+  const isLoading = isSharing || isVerifying;
+
   return (
     <div className={styles.body}>
       <div className={styles.container}>
@@ -206,6 +233,21 @@ export default function ShareView({
             textAlign={"center"}
           >
             {shareError}
+          </Typography>
+        </div>
+      )}
+
+      {/* Show verification status */}
+      {isVerifying && (
+        <div className={styles.verificationMessage}>
+          <Typography
+            variant={"geist"}
+            weight={"medium"}
+            size={14}
+            lineHeight={18}
+            textAlign={"center"}
+          >
+            🔍 Verifying your share to award 3 more points...
           </Typography>
         </div>
       )}
@@ -248,16 +290,18 @@ export default function ShareView({
               size={14}
               lineHeight={10}
             >
-              You will earn 3 BRND points for sharing
+              {isVerifying
+                ? "Verifying share to award 3 points..."
+                : "You will earn 3 BRND points for sharing"}
             </Typography>
             <Button
-              caption={isSharing ? "Sharing..." : "Share now"}
+              caption={getButtonState()}
               className={styles.button}
               iconLeft={
-                isSharing ? <LoaderIndicator size={16} /> : <ShareIcon />
+                isLoading ? <LoaderIndicator size={16} /> : <ShareIcon />
               }
               onClick={handleClickShare}
-              disabled={isSharing}
+              disabled={isLoading}
             />
           </div>
         </div>
@@ -267,7 +311,7 @@ export default function ShareView({
           variant={"underline"}
           caption="Skip"
           onClick={handleClickSkip}
-          disabled={isSharing}
+          disabled={isLoading}
         />
       </div>
     </div>

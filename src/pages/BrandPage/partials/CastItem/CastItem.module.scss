@@ -1,17 +1,20 @@
+// /src/pages/BrandPage/partials/CastItem/CastItem.module.scss
+
 @import "@/styles/index.scss";
 
 .layout {
-  background-color: #FFFFFF1A;
-  border: 1px solid #2F2F2F;
+  background-color: #ffffff1a;
+  border: 1px solid #2f2f2f;
   border-radius: 12px;
   padding: 16px;
-  
+
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.title, .header {
+.title,
+.header {
   display: flex;
   flex-direction: row;
   gap: 4px;
@@ -39,7 +42,7 @@
 }
 
 .external {
-  color: #8A8A8A;
+  color: #8a8a8a;
   margin-left: auto;
   position: relative;
   top: -12px;
